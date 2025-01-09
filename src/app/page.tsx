@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Film } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
    return (
       <div className="flex min-h-screen flex-col items-center justify-center p-24 bg-background text-foreground">
-         <h1 className="text-4xl font-bold mb-8">Welcome to Short Video App</h1>
+         <h1 className="text-4xl font-bold mb-8 flex">
+            Welcome to ReelDash{" "}
+            <Image src="/icons8-wind-64.png" alt="Icon" width="38" height="38" />
+         </h1>
          <div className="flex space-x-4">
             <Link href="/login">
                <Button className="yellow-accent-bg">Login</Button>
