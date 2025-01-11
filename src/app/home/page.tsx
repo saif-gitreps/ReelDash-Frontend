@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import Video from "../components/video";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BarChart2 } from "lucide-react";
-import Navbar from "../components/navbar";
+import { BarChart2, ChevronUp, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 const dummyVideos = [
@@ -52,29 +51,9 @@ export default function Home() {
 
    return (
       <div className="h-screen w-full overflow-hidden relative">
-         <Navbar />
          <div {...handlers} className="h-full">
-            <Video
-               {...dummyVideos[currentVideoIndex]}
-               key={dummyVideos[currentVideoIndex].id}
-            />
+            <Video {...dummyVideos[currentVideoIndex]} />
          </div>
-         <Button
-            variant="ghost"
-            size="icon"
-            className="absolute left-4 top-1/2 transform -translate-y-1/2"
-            onClick={prevVideo}
-         >
-            <ChevronLeft className="h-6 w-6" />
-         </Button>
-         <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-4 top-1/2 transform -translate-y-1/2"
-            onClick={nextVideo}
-         >
-            <ChevronRight className="h-6 w-6" />
-         </Button>
          <Link href={`/video/${dummyVideos[currentVideoIndex].id}/stats`}>
             <Button
                variant="ghost"
@@ -84,6 +63,24 @@ export default function Home() {
                <BarChart2 className="h-6 w-6" />
             </Button>
          </Link>
+         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+            <Button
+               variant="secondary"
+               size="icon"
+               onClick={prevVideo}
+               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75"
+            >
+               <ChevronUp className="h-6 w-6" />
+            </Button>
+            <Button
+               variant="secondary"
+               size="icon"
+               onClick={nextVideo}
+               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75"
+            >
+               <ChevronDown className="h-6 w-6" />
+            </Button>
+         </div>
       </div>
    );
 }

@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Home() {
    return (
-      <div className="flex min-h-screen flex-col items-center justify-center p-24 bg-background text-foreground">
+      <div className="flex min-h-screen flex-col items-center justify-center p-24 bg-background text-foreground w-full">
          <h1 className="text-4xl font-bold mb-8 flex">
             Welcome to ReelDash{" "}
             <Image src="/icons8-wind-64.png" alt="Icon" width="38" height="38" />
