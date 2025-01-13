@@ -10,7 +10,13 @@ export default function RootWrapper({
    const pathname = usePathname();
 
    return (
-      <main className={`flex-grow ${pathname === "/" ? "" : "pl-12 md:pl-32"}`}>
+      <main
+         className={`flex-grow ${
+            pathname === "/" || pathname == "/signup" || pathname === "/login"
+               ? ""
+               : "pl-12 md:pl-32"
+         }`}
+      >
          {children}
       </main>
    );

@@ -9,8 +9,7 @@ export default function Navbar() {
    const pathname = usePathname();
    const router = useRouter();
 
-   // Hide navbar on the landing page
-   if (pathname === "/") return null;
+   if (pathname === "/" || pathname === "/signup" || pathname === "/login") return null;
 
    const handleLogout = () => {
       // TODO: Implement logout logic here
