@@ -1,3 +1,4 @@
+import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
 
 interface VideoOwner {
@@ -19,18 +20,9 @@ interface WatchHistoryResponse {
    message: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
-
 const fetchWatchHistory = async (): Promise<WatchHistoryResponse> => {
-   const response = await fetch(`${API_BASE_URL}/api/users/watch-history`, {
-      credentials: "include",
-   });
-
-   if (!response.ok) {
-      throw new Error("Error fetching watch history");
-   }
-
-   return response.json();
+   const { data } = await apiClient.get("/api/users/watch-history");
+   return data;
 };
 
 export const useWatchHistory = () => {

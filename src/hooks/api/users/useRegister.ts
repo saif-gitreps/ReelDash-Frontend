@@ -1,3 +1,4 @@
+import apiClient from "@/lib/api-client";
 import { useMutation } from "@tanstack/react-query";
 
 interface RegisterUserBody {
@@ -22,8 +23,6 @@ interface RegisterUserResponse {
    message: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
-
 const registerUser = async (data: RegisterUserBody): Promise<RegisterUserResponse> => {
    const formData = new FormData();
    formData.append("fullname", data.fullname);
@@ -33,16 +32,10 @@ const registerUser = async (data: RegisterUserBody): Promise<RegisterUserRespons
    formData.append("avatar", data.avatar);
    if (data.coverImage) formData.append("coverImage", data.coverImage);
 
-   const response = await fetch(`${API_BASE_URL}/api/users/register`, {
-      method: "POST",
-      body: formData,
+   const response = await apiClient.post("/api/users/register", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
    });
-
-   if (!response.ok) {
-      throw new Error("Error registering user");
-   }
-
-   return response.json();
+   return response.data;
 };
 
 export const useRegisterUser = () => {

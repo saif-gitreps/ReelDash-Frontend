@@ -1,3 +1,4 @@
+import apiClient from "@/lib/api-client";
 import { useMutation } from "@tanstack/react-query";
 
 interface UpdateUserAvatarResponse {
@@ -13,23 +14,14 @@ interface UpdateUserAvatarResponse {
    message: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
-
 const updateUserAvatar = async (avatar: File): Promise<UpdateUserAvatarResponse> => {
    const formData = new FormData();
    formData.append("avatar", avatar);
 
-   const response = await fetch(`${API_BASE_URL}/api/users/update-avatar`, {
-      method: "POST",
-      body: formData,
-      credentials: "include",
+   const response = await apiClient.post("/api/users/update-avatar", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
    });
-
-   if (!response.ok) {
-      throw new Error("Error updating avatar");
-   }
-
-   return response.json();
+   return response.data;
 };
 
 export const useUpdateUserAvatar = () => {

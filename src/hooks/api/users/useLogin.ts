@@ -1,4 +1,6 @@
+import apiClient from "@/lib/api-client";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 interface LoginUserBody {
    email: string;
@@ -22,21 +24,16 @@ interface LoginUserResponse {
    message: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
-
 const loginUser = async (data: LoginUserBody): Promise<LoginUserResponse> => {
-   const response = await fetch(`${API_BASE_URL}/api/users/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      credentials: "include",
-   });
-
-   if (!response.ok) {
-      throw new Error("Error logging in user");
+   try {
+      const response = await apiClient.post("/api/v1/users/login", data);
+      return response.data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(error.response.data.message || "An error occurred during login");
+      }
+      throw new Error("Network error occurred");
    }
-
-   return response.json();
 };
 
 export const useLoginUser = () => {

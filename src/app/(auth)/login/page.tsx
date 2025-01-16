@@ -1,24 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-export default function Login() {
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
+import { toast } from "react-hot-toast"; // Assuming you use react-hot-toast for notifications
+import { useLoginUser } from "@/hooks/api/users/useLogin";
 
-   const handleLogin = async (e: React.FormEvent) => {
-      e.preventDefault();
-      // TODO: Implement API call for login
-      console.log("Login with:", { email, password });
+interface LoginFormInputs {
+   email: string;
+   password: string;
+}
+
+export default function Login() {
+   const { register, handleSubmit } = useForm<LoginFormInputs>();
+   const { mutate: loginUser, isPending } = useLoginUser();
+
+   const onSubmit = (data: LoginFormInputs) => {
+      loginUser(data, {
+         onSuccess: (response) => {
+            toast.success(response.message);
+         },
+         onError: (error) => {
+            toast.error(`Login failed. ${error.message}`);
+         },
+      });
    };
 
    return (
       <div className="flex min-h-screen items-center justify-center">
-         <form onSubmit={handleLogin} className="space-y-4 w-full max-w-md">
+         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
             <h1 className="text-2xl font-bold mb-6">Login</h1>
             <div>
                Do not have an account?{" "}
@@ -31,9 +44,7 @@ export default function Login() {
                <Input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  {...register("email", { required: "Email is required" })}
                />
             </div>
             <div>
@@ -41,13 +52,11 @@ export default function Login() {
                <Input
                   id="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register("password", { required: "Password is required" })}
                />
             </div>
-            <Button type="submit" className="w-full">
-               Login
+            <Button type="submit" className="w-full" disabled={isPending}>
+               {isPending ? "Logging in..." : "Login"}
             </Button>
 
             <Link href="/home" className="mt-10 block text-center">
