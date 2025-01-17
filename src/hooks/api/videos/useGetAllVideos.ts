@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 interface VideoOwner {
    _id: string;
@@ -22,7 +23,7 @@ interface GetAllVideosResponse {
    message: string;
 }
 
-interface GetAllVideosParams {
+interface GetAllVideosBody {
    page?: number;
    limit?: number;
    query?: string;
@@ -31,14 +32,19 @@ interface GetAllVideosParams {
    userId?: string;
 }
 
-const fetchAllVideos = async (
-   params: GetAllVideosParams
-): Promise<GetAllVideosResponse> => {
-   const { data } = await apiClient.post("/api/videos", params);
-   return data;
+const fetchAllVideos = async (data: GetAllVideosBody): Promise<GetAllVideosResponse> => {
+   try {
+      const response = await apiClient.get("/api/v1/videos", { params: data });
+      return response.data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(error.response.data.message || "An error occurred during login");
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
-export const useGetAllVideos = (params: GetAllVideosParams) => {
+export const useGetAllVideos = (params: GetAllVideosBody) => {
    return useQuery<GetAllVideosResponse, Error>({
       queryKey: ["getAllVideos", params],
       queryFn: () => fetchAllVideos(params),

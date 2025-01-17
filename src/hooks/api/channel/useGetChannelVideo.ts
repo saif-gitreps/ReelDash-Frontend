@@ -52,6 +52,6 @@ export const useGetChannelVideos = (
    return useQuery<GetChannelVideosResponse, Error>({
       queryKey: ["channelVideos", params],
       queryFn: () => fetchChannelVideos(params),
-      enabled: !!params.page, // Ensures the query only runs when `page` is provided
+      enabled: !!params.page,
    });
 };

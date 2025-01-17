@@ -29,7 +29,7 @@ const publishVideo = async (data: PublishVideoBody): Promise<PublishVideoRespons
    formData.append("thumbnail", data.thumbnail);
    formData.append("video", data.video);
 
-   const response = await apiClient.post("/api/videos/publish", formData, {
+   const response = await apiClient.post("/api/v1/videos", formData, {
       headers: { "Content-Type": "multipart/form-data" },
    });
 

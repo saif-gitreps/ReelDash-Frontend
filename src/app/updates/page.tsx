@@ -1,95 +1,140 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Plus, Filter, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Filter, Trash2, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { useGetSubbedChannelsPosts } from "@/hooks/api/updates/useGetSubbedChannelsPosts";
+import { useDeletePost } from "@/hooks/api/updates/useDeleteUpdate";
+import Image from "next/image";
+import formatDate from "@/lib/format-date";
 
-interface Post {
-   id: string;
-   username: string;
-   content: string;
-   isOwnPost: boolean;
-}
-
-const dummyPosts: Post[] = [
-   { id: "1", username: "user1", content: "Check out my new video!", isOwnPost: true },
-   { id: "2", username: "user2", content: "Just uploaded a tutorial", isOwnPost: false },
-   { id: "3", username: "user3", content: "Live streaming in 1 hour!", isOwnPost: false },
-   { id: "4", username: "user4", content: "New dance challenge!", isOwnPost: false },
-   { id: "5", username: "user5", content: "Behind the scenes footage", isOwnPost: true },
-   { id: "6", username: "user6", content: "Q&A session tomorrow", isOwnPost: false },
-];
-
-const POSTS_PER_PAGE = 3;
+const UPDATES_PER_PAGE = 6;
 
 export default function Updates() {
-   const [posts, setPosts] = useState(dummyPosts);
-   const [showOwnPosts, setShowOwnPosts] = useState(false);
+   const [isMounted, setIsMounted] = useState(false);
+   const [showOwnUpates, setShowOwnUpdates] = useState(false);
    const [currentPage, setCurrentPage] = useState(1);
 
-   const filteredPosts = showOwnPosts ? posts.filter((post) => post.isOwnPost) : posts;
-   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
-   const paginatedPosts = filteredPosts.slice(
-      (currentPage - 1) * POSTS_PER_PAGE,
-      currentPage * POSTS_PER_PAGE
-   );
+   const { data, isFetching } = useGetSubbedChannelsPosts({
+      page: currentPage,
+      limit: UPDATES_PER_PAGE,
+   });
+   const { mutate: deleteUpdate, isPending: isDeletePending } = useDeletePost();
 
-   const handleDelete = (id: string) => {
-      setPosts(posts.filter((post) => post.id !== id));
+   useEffect(() => {
+      setIsMounted(true);
+   }, []);
+
+   const updates = data?.data || [];
+   const totalPages = Math.ceil((updates.length || 0) / UPDATES_PER_PAGE); // Use totalCount instead of length
+
+   // const filteredUpdates = showOwnUpates
+   //    ? updates.filter((post) => post.owner === "your-user-id")
+   //    : updates;
+
+   const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+
+   const handleDelete = async (id: string) => {
+      deleteUpdate(id, {
+         onSuccess: (response) => {
+            toast.success(response.message);
+         },
+         onError: (error) => {
+            toast.error(`Deleting update failed. ${error.message}`);
+         },
+      });
    };
 
-   const nextPage = () => {
-      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-   };
-
-   const prevPage = () => {
-      setCurrentPage((prev) => Math.max(prev - 1, 1));
-   };
+   if (isFetching || !isMounted) {
+      return (
+         <div className="container mx-auto p-4 bg-background text-foreground">
+            <div className="animate-pulse space-y-4">
+               <div className="h-8 bg-secondary rounded w-1/3"></div>
+               <div className="h-32 bg-secondary rounded"></div>
+               <div className="h-32 bg-secondary rounded"></div>
+               <div className="h-32 bg-secondary rounded"></div>
+               <div className="h-32 bg-secondary rounded"></div>
+               <div className="h-32 bg-secondary rounded"></div>
+               <div className="h-32 bg-secondary rounded"></div>
+            </div>
+         </div>
+      );
+   }
 
    return (
-      <div className="container mx-auto p-4 bg-background text-foreground">
+      <div
+         className="container mx-auto p-4 bg-background text-foreground"
+         data-gramm="false"
+      >
          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">Updates</h1>
-            <div className="space-x-2">
+            <h1 className="text-2xl font-bold hidden sm:block">
+               Updates from subscribed channels
+            </h1>
+            <div className="space-x-2 flex">
                <Button
-                  onClick={() => setShowOwnPosts(!showOwnPosts)}
+                  onClick={() => setShowOwnUpdates(!showOwnUpates)}
                   className="yellow-accent-bg"
                >
-                  <Filter className="w-4 h-4 mr-2" />
-                  {showOwnPosts ? "Show All" : "Show My Posts"}
+                  <Filter className="w-4 h-4 md:mr-2" />
+                  {showOwnUpates ? "Show All" : "Show My Posts"}
                </Button>
                <Link href="/updates/new">
                   <Button className="yellow-accent-bg">
-                     <Plus className="w-4 h-4 mr-2" />
+                     <Plus className="w-4 h-4 md:mr-2" />
                      New Post
                   </Button>
                </Link>
             </div>
          </div>
-         <div className="space-y-4">
-            {paginatedPosts.map((post) => (
-               <div
-                  key={post.id}
-                  className="bg-secondary p-4 rounded-lg flex justify-between items-start"
-               >
-                  <div>
-                     <p className="font-semibold">{post.username}</p>
-                     <p>{post.content}</p>
+
+         <div className="space-y-2">
+            {updates.length === 0 ? (
+               <div className="text-center text-muted-foreground">No updates</div>
+            ) : (
+               updates.map((update) => (
+                  <div key={update._id} className="bg-secondary p-3 rounded-lg ">
+                     <div>
+                        <div className="mb-4">
+                           <div className="font-semibold flex gap-2 mb-2 items-center">
+                              {/* TODO: Make this a link to profile*/}
+                              <Image
+                                 src={update.ownerDetails.avatar}
+                                 width={20}
+                                 height={10}
+                                 alt={update.ownerDetails.username}
+                                 className="rounded-full"
+                              />
+
+                              <div>{update.ownerDetails.username}</div>
+                           </div>
+                           <div className="text-xs text-gray-300">
+                              {formatDate(update.createdAt)}
+                           </div>
+                        </div>
+                        <div>{update.content}</div>
+                     </div>
+                     {update.owner === "your-user-id" && (
+                        <Button
+                           variant="ghost"
+                           size="icon"
+                           onClick={() => handleDelete(update._id)}
+                           className="text-destructive hover:text-destructive"
+                        >
+                           {isDeletePending ? (
+                              <Loader2 className="animate-spin" />
+                           ) : (
+                              <Trash2 className="w-4 h-4" />
+                           )}
+                        </Button>
+                     )}
                   </div>
-                  {post.isOwnPost && (
-                     <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(post.id)}
-                        className="text-destructive hover:text-destructive"
-                     >
-                        <Trash2 className="w-4 h-4" />
-                     </Button>
-                  )}
-               </div>
-            ))}
+               ))
+            )}
          </div>
+
          <div className="flex justify-between items-center mt-4">
             <Button
                onClick={prevPage}

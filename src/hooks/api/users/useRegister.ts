@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api-client";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 interface RegisterUserBody {
    fullname: string;
@@ -32,14 +33,20 @@ const registerUser = async (data: RegisterUserBody): Promise<RegisterUserRespons
    formData.append("avatar", data.avatar);
    if (data.coverImage) formData.append("coverImage", data.coverImage);
 
-   const response = await apiClient.post("/api/users/register", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-   });
-   return response.data;
+   try {
+      const response = await apiClient.post("/api/v1/users/register", formData, {
+         headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(error.response.data.message || "An error occurred during login");
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
 export const useRegisterUser = () => {
-   // TODO: Add on success and error toasts.
    return useMutation({
       mutationFn: registerUser,
    });

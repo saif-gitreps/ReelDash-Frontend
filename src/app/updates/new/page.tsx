@@ -1,38 +1,73 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { useAddPost } from "@/hooks/api/updates/useAddUpdate";
+import toast from "react-hot-toast";
+
+// Define validation schema using Zod
+const postSchema = z.object({
+   content: z
+      .string()
+      .min(1, "Content is required")
+      .max(500, "Content must be less than 500 characters"),
+});
+
+type PostFormValues = z.infer<typeof postSchema>;
 
 export default function NewPost() {
-   const [content, setContent] = useState("");
    const router = useRouter();
+   const { mutate: addPost, isPending } = useAddPost();
 
-   const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      // TODO: Implement post creation logic
-      console.log("New post:", content);
-      router.push("/updates");
+   const {
+      register,
+      handleSubmit,
+      formState: { errors },
+   } = useForm<PostFormValues>({
+      resolver: zodResolver(postSchema),
+      mode: "onSubmit",
+   });
+
+   // Form submission handler
+   const onSubmit: SubmitHandler<PostFormValues> = (data) => {
+      addPost(data, {
+         onSuccess: (response) => {
+            toast.success(response.message);
+            router.push("/updates");
+         },
+         onError: (error) => {
+            toast.error(`Adding update failed. ${error.message}`);
+         },
+      });
    };
 
    return (
       <div className="container mx-auto p-4 bg-background text-foreground">
          <h1 className="text-2xl font-bold mb-4">Create New Post</h1>
-         <form onSubmit={handleSubmit} className="space-y-4">
+         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
                <Label htmlFor="content">Post Content</Label>
                <Textarea
                   id="content"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  {...register("content")}
                   className="bg-secondary text-foreground"
                   rows={4}
                />
+               {errors.content && (
+                  <p className="text-red-500 mt-1">{errors.content.message}</p>
+               )}
             </div>
-            <Button type="submit" className="yellow-accent-bg w-full">
-               Post Update
+            <Button
+               type="submit"
+               disabled={isPending}
+               className="yellow-accent-bg w-full"
+            >
+               {isPending ? "Posting..." : "Post Update"}
             </Button>
          </form>
       </div>
