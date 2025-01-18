@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast"; // Assuming you use react-hot-toast for
 import { useLoginUser } from "@/hooks/api/users/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import AuthLayer from "@/app/components/AuthLayer";
 
 interface LoginFormInputs {
    email: string;
@@ -36,39 +37,41 @@ export default function Login() {
    };
 
    return (
-      <div className="flex min-h-screen items-center justify-center">
-         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
-            <h1 className="text-2xl font-bold mb-6">Login</h1>
-            <div>
-               Do not have an account?{" "}
-               <Link href="/signup" className="text-blue-500">
-                  Signup
-               </Link>
-            </div>
-            <div>
-               <Label htmlFor="email">Email</Label>
-               <Input
-                  id="email"
-                  type="email"
-                  {...register("email", { required: "Email is required" })}
-               />
-            </div>
-            <div>
-               <Label htmlFor="password">Password</Label>
-               <Input
-                  id="password"
-                  type="password"
-                  {...register("password", { required: "Password is required" })}
-               />
-            </div>
-            <Button type="submit" className="w-full" disabled={isPending}>
-               {isPending ? "Logging in..." : "Login"}
-            </Button>
+      <AuthLayer isProtected={false}>
+         <div className="flex min-h-screen items-center justify-center">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
+               <h1 className="text-2xl font-bold mb-6">Login</h1>
+               <div>
+                  Do not have an account?{" "}
+                  <Link href="/signup" className="text-blue-500">
+                     Signup
+                  </Link>
+               </div>
+               <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                     id="email"
+                     type="email"
+                     {...register("email", { required: "Email is required" })}
+                  />
+               </div>
+               <div>
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                     id="password"
+                     type="password"
+                     {...register("password", { required: "Password is required" })}
+                  />
+               </div>
+               <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Logging in..." : "Login"}
+               </Button>
 
-            <Link href="/home" className="mt-10 block text-center">
-               Scroll reels
-            </Link>
-         </form>
-      </div>
+               <Link href="/home" className="mt-10 block text-center">
+                  Scroll reels
+               </Link>
+            </form>
+         </div>
+      </AuthLayer>
    );
 }

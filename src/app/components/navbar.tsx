@@ -93,13 +93,13 @@ export default function Navbar() {
          )}
 
          {isAuthenticated && (
-            <div className="mt-auto w-full px-2 md:px-3">
+            <div className="mt-auto flex items-center gap-2 w-p-2 md:px-3 w-full">
                <Button
                   variant="ghost"
-                  className="w-full justify-start text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  className="w-full justify-start text-muted-foreground hover:text-primary hover:bg-red-700"
                   onClick={handleLogout}
                >
-                  <LogOut className="h-5 w-5 md:h-6 md:w-6 md:mr-2" />
+                  <LogOut className="h-5 w-5 md:h-6 md:w-6" />
                   <span className="hidden md:inline">Logout</span>
                </Button>
             </div>

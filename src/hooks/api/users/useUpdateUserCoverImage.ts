@@ -5,7 +5,7 @@ import axios from "axios";
 interface UpdateUserCoverImageResponse {
    statusCode: number;
    data: {
-      id: string;
+      _id: string;
       fullname: string;
       username: string;
       email: string;

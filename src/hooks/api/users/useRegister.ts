@@ -14,7 +14,7 @@ interface RegisterUserBody {
 interface RegisterUserResponse {
    statusCode: number;
    data: {
-      id: string;
+      _id: string;
       fullname: string;
       username: string;
       email: string;

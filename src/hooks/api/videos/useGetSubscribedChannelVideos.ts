@@ -34,7 +34,7 @@ interface GetSubscribedChannelsVideosParams {
 const fetchSubscribedChannelsVideos = async (
    params: GetSubscribedChannelsVideosParams
 ): Promise<GetSubscribedChannelsVideosResponse> => {
-   const { data } = await apiClient.get("/api/videos/subscriptions", { params });
+   const { data } = await apiClient.get("/api/v1/videos/subscriptions", { params });
    return data;
 };
 

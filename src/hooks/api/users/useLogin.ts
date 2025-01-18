@@ -11,7 +11,7 @@ interface LoginUserResponse {
    statusCode: number;
    data: {
       user: {
-         id: string;
+         _id: string;
          fullname: string;
          username: string;
          email: string;

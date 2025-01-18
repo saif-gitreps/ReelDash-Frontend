@@ -11,6 +11,7 @@ import { useRegisterUser } from "@/hooks/api/users/useRegister";
 import { useLoginUser } from "@/hooks/api/users/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import AuthLayer from "@/app/components/AuthLayer";
 
 interface SignUpFormInputs {
    fullname: string;
@@ -40,7 +41,7 @@ export default function SignUp() {
             toast.success(response.message);
             loginUser({ email: formData.email, password: formData.password });
 
-            login({ ...response.data }, "");
+            login(response.data, "");
 
             router.push("/feed");
          },
@@ -51,67 +52,69 @@ export default function SignUp() {
    };
 
    return (
-      <div className="flex min-h-screen items-center justify-center">
-         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
-            <h1 className="text-2xl font-bold mb-6">Sign Up</h1>
-            <div>
-               Have an account?{" "}
-               <Link href="/login" className="text-blue-500">
-                  Login
-               </Link>
-            </div>
-            <div>
-               <Label htmlFor="fullname">Full Name</Label>
-               <Input
-                  id="fullname"
-                  type="text"
-                  {...register("fullname", { required: "Full name is required" })}
-               />
-            </div>
-            <div>
-               <Label htmlFor="username">Username</Label>
-               <Input
-                  id="username"
-                  type="text"
-                  {...register("username", { required: "Username is required" })}
-               />
-            </div>
-            <div>
-               <Label htmlFor="email">Email</Label>
-               <Input
-                  id="email"
-                  type="email"
-                  {...register("email", { required: "Email is required" })}
-               />
-            </div>
-            <div>
-               <Label htmlFor="password">Password</Label>
-               <Input
-                  id="password"
-                  type="password"
-                  {...register("password", { required: "Password is required" })}
-               />
-            </div>
-            <div>
-               <Label htmlFor="avatar">Avatar</Label>
-               <Input
-                  id="avatar"
-                  type="file"
-                  {...register("avatar", { required: "Avatar is required" })}
-               />
-            </div>
-            <div>
-               <Label htmlFor="coverImage">Cover Image (Optional)</Label>
-               <Input id="coverImage" type="file" {...register("coverImage")} />
-            </div>
-            <Button type="submit" className="w-full" disabled={isPending}>
-               {isPending ? "Signing up..." : "Sign Up"}
-            </Button>
+      <AuthLayer isProtected={false}>
+         <div className="flex min-h-screen items-center justify-center">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
+               <h1 className="text-2xl font-bold mb-6">Sign Up</h1>
+               <div>
+                  Have an account?{" "}
+                  <Link href="/login" className="text-blue-500">
+                     Login
+                  </Link>
+               </div>
+               <div>
+                  <Label htmlFor="fullname">Full Name</Label>
+                  <Input
+                     id="fullname"
+                     type="text"
+                     {...register("fullname", { required: "Full name is required" })}
+                  />
+               </div>
+               <div>
+                  <Label htmlFor="username">Username</Label>
+                  <Input
+                     id="username"
+                     type="text"
+                     {...register("username", { required: "Username is required" })}
+                  />
+               </div>
+               <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                     id="email"
+                     type="email"
+                     {...register("email", { required: "Email is required" })}
+                  />
+               </div>
+               <div>
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                     id="password"
+                     type="password"
+                     {...register("password", { required: "Password is required" })}
+                  />
+               </div>
+               <div>
+                  <Label htmlFor="avatar">Avatar</Label>
+                  <Input
+                     id="avatar"
+                     type="file"
+                     {...register("avatar", { required: "Avatar is required" })}
+                  />
+               </div>
+               <div>
+                  <Label htmlFor="coverImage">Cover Image (Optional)</Label>
+                  <Input id="coverImage" type="file" {...register("coverImage")} />
+               </div>
+               <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Signing up..." : "Sign Up"}
+               </Button>
 
-            <Link href="/home" className="mt-10 block text-center">
-               Scroll reels
-            </Link>
-         </form>
-      </div>
+               <Link href="/home" className="mt-10 block text-center">
+                  Scroll reels
+               </Link>
+            </form>
+         </div>
+      </AuthLayer>
    );
 }

@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useAddPost } from "@/hooks/api/updates/useAddUpdate";
 import toast from "react-hot-toast";
+import AuthLayer from "@/app/components/AuthLayer";
 
 // Define validation schema using Zod
 const postSchema = z.object({
@@ -47,29 +48,31 @@ export default function NewPost() {
    };
 
    return (
-      <div className="container mx-auto p-4 bg-background text-foreground">
-         <h1 className="text-2xl font-bold mb-4">Create New Post</h1>
-         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-               <Label htmlFor="content">Post Content</Label>
-               <Textarea
-                  id="content"
-                  {...register("content")}
-                  className="bg-secondary text-foreground"
-                  rows={4}
-               />
-               {errors.content && (
-                  <p className="text-red-500 mt-1">{errors.content.message}</p>
-               )}
-            </div>
-            <Button
-               type="submit"
-               disabled={isPending}
-               className="yellow-accent-bg w-full"
-            >
-               {isPending ? "Posting..." : "Post Update"}
-            </Button>
-         </form>
-      </div>
+      <AuthLayer isProtected>
+         <div className="container mx-auto p-4 bg-background text-foreground">
+            <h1 className="text-2xl font-bold mb-4">Post a new update</h1>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+               <div>
+                  <Label htmlFor="content">Content</Label>
+                  <Textarea
+                     id="content"
+                     {...register("content")}
+                     className="bg-secondary text-foreground"
+                     rows={4}
+                  />
+                  {errors.content && (
+                     <p className="text-red-500 mt-1">{errors.content.message}</p>
+                  )}
+               </div>
+               <Button
+                  type="submit"
+                  disabled={isPending}
+                  className="yellow-accent-bg w-full"
+               >
+                  {isPending ? "Posting..." : "Post Update"}
+               </Button>
+            </form>
+         </div>
+      </AuthLayer>
    );
 }

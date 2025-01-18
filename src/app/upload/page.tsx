@@ -11,8 +11,8 @@ import Navbar from "../components/navbar";
 import { usePublishAVideo } from "@/hooks/api/videos/usePublishAVideo";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import AuthLayer from "../components/AuthLayer";
 
-// Define form schema using Zod
 const videoUploadSchema = z.object({
    title: z.string().min(1, "Title is required").max(100, "Title is too long"),
    description: z
@@ -27,7 +27,6 @@ const videoUploadSchema = z.object({
       .refine((file) => file?.type.startsWith("video/"), "Video must be a video file"),
 });
 
-// Infer form values from schema
 type VideoUploadFormValues = z.infer<typeof videoUploadSchema>;
 
 export default function UploadVideo() {
@@ -64,7 +63,6 @@ export default function UploadVideo() {
       );
    };
 
-   // File input handlers
    const handleFileChange = (
       e: React.ChangeEvent<HTMLInputElement>,
       field: "thumbnail" | "video"
@@ -74,48 +72,50 @@ export default function UploadVideo() {
    };
 
    return (
-      <div className="container mx-auto p-4 pb-16">
-         <Navbar />
-         <h1 className="text-2xl font-bold mb-4">Upload Video</h1>
-         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-               <Label htmlFor="title">Title</Label>
-               <Input id="title" {...register("title")} />
-               {errors.title && <p className="text-red-500">{errors.title.message}</p>}
-            </div>
-            <div>
-               <Label htmlFor="description">Description</Label>
-               <Textarea id="description" rows={4} {...register("description")} />
-               {errors.description && (
-                  <p className="text-red-500">{errors.description.message}</p>
-               )}
-            </div>
-            <div>
-               <Label htmlFor="thumbnail">Thumbnail File</Label>
-               <Input
-                  id="thumbnail"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(e, "thumbnail")}
-               />
-               {errors.thumbnail && (
-                  <p className="text-red-500">{errors.thumbnail.message}</p>
-               )}
-            </div>
-            <div>
-               <Label htmlFor="video">Video File</Label>
-               <Input
-                  id="video"
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) => handleFileChange(e, "video")}
-               />
-               {errors.video && <p className="text-red-500">{errors.video.message}</p>}
-            </div>
-            <Button type="submit" disabled={isPending}>
-               {isPending ? "Uploading..." : "Upload Video"}
-            </Button>
-         </form>
-      </div>
+      <AuthLayer isProtected>
+         <div className="container mx-auto p-4 pb-16">
+            <Navbar />
+            <h1 className="text-2xl font-bold mb-4">Upload Video</h1>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+               <div>
+                  <Label htmlFor="title">Title</Label>
+                  <Input id="title" {...register("title")} />
+                  {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+               </div>
+               <div>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea id="description" rows={4} {...register("description")} />
+                  {errors.description && (
+                     <p className="text-red-500">{errors.description.message}</p>
+                  )}
+               </div>
+               <div>
+                  <Label htmlFor="thumbnail">Thumbnail File</Label>
+                  <Input
+                     id="thumbnail"
+                     type="file"
+                     accept="image/*"
+                     onChange={(e) => handleFileChange(e, "thumbnail")}
+                  />
+                  {errors.thumbnail && (
+                     <p className="text-red-500">{errors.thumbnail.message}</p>
+                  )}
+               </div>
+               <div>
+                  <Label htmlFor="video">Video File</Label>
+                  <Input
+                     id="video"
+                     type="file"
+                     accept="video/*"
+                     onChange={(e) => handleFileChange(e, "video")}
+                  />
+                  {errors.video && <p className="text-red-500">{errors.video.message}</p>}
+               </div>
+               <Button type="submit" disabled={isPending}>
+                  {isPending ? "Uploading..." : "Upload Video"}
+               </Button>
+            </form>
+         </div>
+      </AuthLayer>
    );
 }

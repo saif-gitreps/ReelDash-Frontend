@@ -4,19 +4,9 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-   UserPlus,
-   UserMinus,
-   Upload,
-   Edit,
-   ChevronLeft,
-   ChevronRight,
-} from "lucide-react";
+import { UserPlus, UserMinus, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-interface UserProfileProps {
-   params: { username: string };
-}
+import { useParams } from "next/navigation";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -42,8 +32,9 @@ const dummyWatchHistory = [
    { id: "8", title: "Easy workout at home", creator: "FitnessFanatic" },
 ];
 
-export default function UserProfile({ params }: UserProfileProps) {
-   const { username } = params;
+export default function UserProfile() {
+   const params = useParams();
+   const username = params.username;
    const [isSubscribed, setIsSubscribed] = useState(false);
    const [subscriberCount, setSubscriberCount] = useState(1000);
    const [uploadedPage, setUploadedPage] = useState(1);
