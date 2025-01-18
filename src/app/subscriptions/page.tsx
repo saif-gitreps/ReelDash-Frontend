@@ -5,14 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useGetAllVideos } from "@/hooks/api/videos/useGetAllVideos";
+import { useGetSubscribedChannelsVideos } from "@/hooks/api/videos/useGetSubscribedChannelVideos";
 
 const VIDEOS_PER_PAGE = 6;
 
 export default function Feed() {
    const [currentPage, setCurrentPage] = useState(1);
 
-   const { data, isPending, error } = useGetAllVideos({
+   const { data, isPending, error } = useGetSubscribedChannelsVideos({
       page: currentPage,
       limit: VIDEOS_PER_PAGE,
    });

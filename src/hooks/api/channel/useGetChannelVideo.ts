@@ -4,26 +4,16 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 interface VideoOwner {
    _id: string;
    username: string;
-   avatar: string;
-}
-
-interface VideoComment {
-   _id: string;
-   content: string;
-   owner: VideoOwner;
-   createdAt: string;
 }
 
 interface Video {
    _id: string;
-   title: string;
-   description: string;
    videoFile: string;
    thumbnail: string;
+   owner: VideoOwner;
+   title: string;
+   duration: number;
    createdAt: string;
-   likesCount: number;
-   commentsCount: number;
-   commentsOnTheVideo: VideoComment[];
 }
 
 interface GetChannelVideosResponse {
@@ -37,12 +27,13 @@ interface GetChannelVideosParams {
    limit?: number;
    sortBy?: string;
    sortType?: number;
+   channelId: string;
 }
 
 const fetchChannelVideos = async (
    params: GetChannelVideosParams
 ): Promise<GetChannelVideosResponse> => {
-   const { data } = await apiClient.get("/api/channels/videos", { params });
+   const { data } = await apiClient.get(`/api/v1/channels/videos}`, { params });
    return data;
 };
 

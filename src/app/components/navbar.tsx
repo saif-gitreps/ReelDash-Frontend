@@ -1,20 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Home, User, Film, Bell, LogOut } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Home, User, Film, Bell, LogOut, Subtitles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useLogoutUser } from "@/hooks/api/users/useLogout";
 
 export default function Navbar() {
    const pathname = usePathname();
-   const router = useRouter();
+   const { isAuthenticated, user, logout } = useAuth();
+   const { mutate: logoutUser } = useLogoutUser();
 
    if (pathname === "/" || pathname === "/signup" || pathname === "/login") return null;
 
    const handleLogout = () => {
-      // TODO: Implement logout logic here
-      console.log("Logging out...");
-      router.push("/");
+      logoutUser();
+      logout();
    };
 
    return (
@@ -37,34 +39,71 @@ export default function Navbar() {
             <Film className="h-5 w-5 md:h-6 md:w-6" />
             <span className="hidden md:inline">Feed</span>
          </Link>
-         <Link
-            href="/updates"
-            className={`flex items-center gap-2 p-2 md:px-3 w-full ${
-               pathname === "/updates" ? "yellow-accent" : "text-muted-foreground"
-            }`}
-         >
-            <Bell className="h-5 w-5 md:h-6 md:w-6" />
-            <span className="hidden md:inline">Updates</span>
-         </Link>
-         <Link
-            href="/profile/user1"
-            className={`flex items-center gap-2 p-2 md:px-3 w-full ${
-               pathname.startsWith("/profile") ? "yellow-accent" : "text-muted-foreground"
-            }`}
-         >
-            <User className="h-5 w-5 md:h-6 md:w-6" />
-            <span className="hidden md:inline">Profile</span>
-         </Link>
-         <div className="mt-auto w-full px-2 md:px-3">
-            <Button
-               variant="ghost"
-               className="w-full justify-start text-muted-foreground hover:text-primary hover:bg-primary/10"
-               onClick={handleLogout}
+
+         {isAuthenticated && (
+            <Link
+               href="/subscriptions"
+               className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+                  pathname === "/subscriptions"
+                     ? "yellow-accent"
+                     : "text-muted-foreground"
+               }`}
             >
-               <LogOut className="h-5 w-5 md:h-6 md:w-6 md:mr-2" />
-               <span className="hidden md:inline">Logout</span>
-            </Button>
-         </div>
+               <Subtitles className="h-5 w-5 md:h-6 md:w-6" />
+               <span className="hidden md:inline">Subbed</span>
+            </Link>
+         )}
+
+         {!isAuthenticated && (
+            <Link
+               href="/login"
+               className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+                  pathname === "/login" ? "yellow-accent" : "text-muted-foreground"
+               }`}
+            >
+               <User className="h-5 w-5 md:h-6 md:w-6" />
+               <span className="hidden md:inline">Login</span>
+            </Link>
+         )}
+
+         {isAuthenticated && (
+            <Link
+               href="/updates"
+               className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+                  pathname === "/updates" ? "yellow-accent" : "text-muted-foreground"
+               }`}
+            >
+               <Bell className="h-5 w-5 md:h-6 md:w-6" />
+               <span className="hidden md:inline">Updates</span>
+            </Link>
+         )}
+
+         {isAuthenticated && (
+            <Link
+               href={`/profile/${user?.username}`}
+               className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+                  pathname.startsWith("/profile")
+                     ? "yellow-accent"
+                     : "text-muted-foreground"
+               }`}
+            >
+               <User className="h-5 w-5 md:h-6 md:w-6" />
+               <span className="hidden md:inline">Profile</span>
+            </Link>
+         )}
+
+         {isAuthenticated && (
+            <div className="mt-auto w-full px-2 md:px-3">
+               <Button
+                  variant="ghost"
+                  className="w-full justify-start text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  onClick={handleLogout}
+               >
+                  <LogOut className="h-5 w-5 md:h-6 md:w-6 md:mr-2" />
+                  <span className="hidden md:inline">Logout</span>
+               </Button>
+            </div>
+         )}
       </nav>
    );
 }

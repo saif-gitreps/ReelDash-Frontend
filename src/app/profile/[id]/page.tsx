@@ -131,15 +131,7 @@ export default function UserProfile({ params }: UserProfileProps) {
                      </>
                   )}
                </Button>
-               <Link href={`/profile/${username}/edit`}>
-                  <Button
-                     variant="outline"
-                     className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                  >
-                     <Edit className="w-4 h-4 mr-2" />
-                     Edit Profile
-                  </Button>
-               </Link>
+
                <Link href="/upload">
                   <Button className="yellow-accent-bg">
                      <Upload className="w-4 h-4 mr-2" />

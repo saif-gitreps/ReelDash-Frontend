@@ -9,6 +9,7 @@ import Link from "next/link";
 import { toast } from "react-hot-toast"; // Assuming you use react-hot-toast for notifications
 import { useLoginUser } from "@/hooks/api/users/useLogin";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 interface LoginFormInputs {
    email: string;
@@ -18,12 +19,14 @@ interface LoginFormInputs {
 export default function Login() {
    const { register, handleSubmit } = useForm<LoginFormInputs>();
    const { mutate: loginUser, isPending } = useLoginUser();
+   const { login } = useAuth();
    const router = useRouter();
 
    const onSubmit = (data: LoginFormInputs) => {
       loginUser(data, {
          onSuccess: (response) => {
             toast.success(response.message);
+            login(response.data.user, response.data.accessToken);
             router.push("/feed");
          },
          onError: (error) => {

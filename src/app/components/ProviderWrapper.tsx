@@ -2,8 +2,10 @@
 
 import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CurrentUserWrapper from "./CurrentUserWrapper";
+import Navbar from "./navbar";
 
-export default function RootWrapper({
+export default function ProviderWrapper({
    children,
 }: Readonly<{
    children: React.ReactNode;
@@ -13,6 +15,7 @@ export default function RootWrapper({
 
    return (
       <QueryClientProvider client={queryClient}>
+         <Navbar />
          <main
             className={`flex-grow ${
                pathname === "/" || pathname == "/signup" || pathname === "/login"
@@ -20,7 +23,7 @@ export default function RootWrapper({
                   : "pl-12 md:pl-32"
             }`}
          >
-            {children}
+            <CurrentUserWrapper>{children}</CurrentUserWrapper>
          </main>
       </QueryClientProvider>
    );

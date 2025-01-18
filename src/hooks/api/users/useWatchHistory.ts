@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 interface VideoOwner {
    username: string;
@@ -21,8 +22,17 @@ interface WatchHistoryResponse {
 }
 
 const fetchWatchHistory = async (): Promise<WatchHistoryResponse> => {
-   const { data } = await apiClient.get("/api/users/watch-history");
-   return data;
+   try {
+      const response = await apiClient.get("/api/users/watch-history");
+      return response.data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(
+            error.response.data.message || "An error occurred during watch history fetch"
+         );
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
 export const useWatchHistory = () => {

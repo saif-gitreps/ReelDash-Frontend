@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import { useRegisterUser } from "@/hooks/api/users/useRegister";
 import { useLoginUser } from "@/hooks/api/users/useLogin";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SignUpFormInputs {
    fullname: string;
@@ -25,6 +26,7 @@ export default function SignUp() {
    const { mutate: registerUser, isPending } = useRegisterUser();
    const { mutate: loginUser } = useLoginUser();
    const router = useRouter();
+   const { login } = useAuth();
 
    const onSubmit = (data: SignUpFormInputs) => {
       const formData = {
@@ -37,6 +39,8 @@ export default function SignUp() {
          onSuccess: (response) => {
             toast.success(response.message);
             loginUser({ email: formData.email, password: formData.password });
+
+            login({ ...response.data }, "");
 
             router.push("/feed");
          },

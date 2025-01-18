@@ -30,6 +30,7 @@ interface GetAllVideosBody {
    sortBy?: string;
    sortType?: number;
    userId?: string;
+   username?: string; // getting username from the params
 }
 
 const fetchAllVideos = async (data: GetAllVideosBody): Promise<GetAllVideosResponse> => {
@@ -38,7 +39,9 @@ const fetchAllVideos = async (data: GetAllVideosBody): Promise<GetAllVideosRespo
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occurred while fetching videos"
+         );
       }
       throw new Error("Network error occurred");
    }

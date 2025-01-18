@@ -9,6 +9,7 @@ import { useGetSubbedChannelsPosts } from "@/hooks/api/updates/useGetSubbedChann
 import { useDeletePost } from "@/hooks/api/updates/useDeleteUpdate";
 import Image from "next/image";
 import formatDate from "@/lib/format-date";
+import { useAuth } from "@/hooks/useAuth";
 
 const UPDATES_PER_PAGE = 6;
 
@@ -16,6 +17,7 @@ export default function Updates() {
    const [isMounted, setIsMounted] = useState(false);
    const [showOwnUpates, setShowOwnUpdates] = useState(false);
    const [currentPage, setCurrentPage] = useState(1);
+   const { user } = useAuth();
 
    const { data, isFetching } = useGetSubbedChannelsPosts({
       page: currentPage,
@@ -30,9 +32,12 @@ export default function Updates() {
    const updates = data?.data || [];
    const totalPages = Math.ceil((updates.length || 0) / UPDATES_PER_PAGE); // Use totalCount instead of length
 
-   // const filteredUpdates = showOwnUpates
-   //    ? updates.filter((post) => post.owner === "your-user-id")
-   //    : updates;
+   console.log(updates);
+   console.log(user);
+
+   const filteredUpdates = showOwnUpates
+      ? updates.filter((post) => post.owner === user?._id)
+      : updates;
 
    const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -91,10 +96,10 @@ export default function Updates() {
          </div>
 
          <div className="space-y-2">
-            {updates.length === 0 ? (
+            {filteredUpdates.length === 0 ? (
                <div className="text-center text-muted-foreground">No updates</div>
             ) : (
-               updates.map((update) => (
+               filteredUpdates.map((update) => (
                   <div key={update._id} className="bg-secondary p-3 rounded-lg ">
                      <div>
                         <div className="mb-4">

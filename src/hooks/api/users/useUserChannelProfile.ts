@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 interface UserChannelProfile {
    fullname: string;
@@ -21,8 +22,18 @@ interface UserChannelProfileResponse {
 const fetchUserChannelProfile = async (
    username: string
 ): Promise<UserChannelProfileResponse> => {
-   const { data } = await apiClient.get(`/api/users/channel/${username}`);
-   return data;
+   try {
+      const { data } = await apiClient.get(`/api/users/channel/${username}`);
+      return data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(
+            error.response.data.message ||
+               "An error occurred during user channel profile fetch"
+         );
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
 export const useUserChannelProfile = (username: string) => {
