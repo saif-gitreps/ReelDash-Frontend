@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api-client";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import axios from "axios";
 
 interface Post {
    _id: string;
@@ -16,8 +17,15 @@ interface DeletePostResponse {
 }
 
 const deletePost = async (postId: string): Promise<DeletePostResponse> => {
-   const response = await apiClient.delete(`/api/posts/${postId}`);
-   return response.data;
+   try {
+      const response = await apiClient.delete(`/api/v1/posts/${postId}`);
+      return response.data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(error.response.data.message || "An error occurred during login");
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
 export const useDeletePost = (): UseMutationResult<DeletePostResponse, Error, string> => {

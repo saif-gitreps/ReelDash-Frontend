@@ -11,8 +11,9 @@ import Image from "next/image";
 import formatDate from "@/lib/format-date";
 import { useAuth } from "@/hooks/useAuth";
 import AuthLayer from "../components/AuthLayer";
+import { useQueryClient } from "@tanstack/react-query";
 
-const UPDATES_PER_PAGE = 6;
+const UPDATES_PER_PAGE = 5;
 
 export default function Updates() {
    const [isMounted, setIsMounted] = useState(false);
@@ -30,20 +31,24 @@ export default function Updates() {
       setIsMounted(true);
    }, []);
 
-   const updates = data?.data || [];
-   const totalPages = Math.ceil((updates.length || 0) / UPDATES_PER_PAGE); // Use totalCount instead of length
+   const posts = data?.data.posts || [];
+   const totalPosts = data?.data.totalPosts || 0;
+   const totalPages = Math.ceil(totalPosts / UPDATES_PER_PAGE);
 
    const filteredUpdates = showOwnUpates
-      ? updates.filter((post) => post.owner === user?._id)
-      : updates;
+      ? posts.filter((post) => post.owner === user?._id)
+      : posts;
 
    const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+
+   const queryClient = useQueryClient();
 
    const handleDelete = async (id: string) => {
       deleteUpdate(id, {
          onSuccess: (response) => {
             toast.success(response.message);
+            queryClient.invalidateQueries({ queryKey: ["subbedChannelsPosts"] });
          },
          onError: (error) => {
             toast.error(`Deleting update failed. ${error.message}`);
@@ -96,7 +101,10 @@ export default function Updates() {
                   <div className="text-center text-muted-foreground">No updates</div>
                ) : (
                   filteredUpdates.map((update) => (
-                     <div key={update._id} className="bg-secondary p-3 rounded-lg ">
+                     <div
+                        key={update._id}
+                        className="bg-secondary p-3 rounded-lg flex justify-between"
+                     >
                         <div>
                            <div className="mb-4">
                               <div className="font-semibold flex gap-2 mb-2 items-center">
@@ -117,46 +125,50 @@ export default function Updates() {
                            </div>
                            <div>{update.content}</div>
                         </div>
-                        {update.owner === "your-user-id" && (
-                           <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDelete(update._id)}
-                              className="text-destructive hover:text-destructive"
-                           >
-                              {isDeletePending ? (
-                                 <Loader2 className="animate-spin" />
-                              ) : (
-                                 <Trash2 className="w-4 h-4" />
-                              )}
-                           </Button>
-                        )}
+                        <div>
+                           {update.owner === user?._id && (
+                              <Button
+                                 variant="ghost"
+                                 onClick={() => handleDelete(update._id)}
+                                 className="text-destructive hover:text-destructive"
+                                 disabled={isDeletePending}
+                              >
+                                 {isDeletePending ? (
+                                    <Loader2 className="animate-spin" size={32} />
+                                 ) : (
+                                    <Trash2 size={32} />
+                                 )}
+                              </Button>
+                           )}
+                        </div>
                      </div>
                   ))
                )}
             </div>
 
-            <div className="flex justify-between items-center mt-4">
-               <Button
-                  onClick={prevPage}
-                  disabled={currentPage === 1}
-                  className="yellow-accent-bg"
-               >
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                  Previous
-               </Button>
-               <span>
-                  Page {currentPage} of {totalPages}
-               </span>
-               <Button
-                  onClick={nextPage}
-                  disabled={currentPage === totalPages}
-                  className="yellow-accent-bg"
-               >
-                  Next
-                  <ChevronRight className="w-4 h-4 ml-2" />
-               </Button>
-            </div>
+            {totalPages > 1 && (
+               <div className="flex justify-between items-center mt-4">
+                  <Button
+                     onClick={prevPage}
+                     disabled={currentPage === 1 || isFetching}
+                     className="yellow-accent-bg"
+                  >
+                     <ChevronLeft className="w-4 h-4 mr-2" />
+                     Previous
+                  </Button>
+                  <span>
+                     Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                     onClick={nextPage}
+                     disabled={currentPage === totalPages || isFetching}
+                     className="yellow-accent-bg"
+                  >
+                     Next
+                     <ChevronRight className="w-4 h-4 ml-2" />
+                  </Button>
+               </div>
+            )}
          </div>
       </AuthLayer>
    );

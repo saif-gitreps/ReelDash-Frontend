@@ -19,10 +19,12 @@ interface Video {
 
 interface GetAllVideosResponse {
    statusCode: number;
-   data: Video[];
+   data: {
+      videos: Video[];
+      totalVideos: number; // Add total count
+   };
    message: string;
 }
-
 interface GetAllVideosBody {
    page?: number;
    limit?: number;

@@ -18,7 +18,10 @@ interface OwnerDetails {
 
 interface GetSubbedChannelsPostsResponse {
    statusCode: number;
-   data: Post[];
+   data: {
+      posts: Post[];
+      totalPosts: number;
+   };
    message: string;
 }
 
@@ -32,24 +35,6 @@ const fetchSubbedChannelsPosts = async (
 ): Promise<GetSubbedChannelsPostsResponse> => {
    try {
       const response = await apiClient.get("/api/v1/posts", { params });
-
-      console.log("Raw API response:", response.data);
-
-      // if (response.data.data) {
-      //    console.log("First post sample:", response.data.data[0]);
-      //    console.log(
-      //       "ownersDetails of first post:",
-      //       response.data.data[0]?.ownersDetails
-      //    );
-
-      //    // Validate the structure of each post
-      //    response.data.data.forEach((post: Post, index: number) => {
-      //       if (!post.ownersDetails) {
-      //          console.warn(`Post at index ${index} is missing ownersDetails:`, post);
-      //       }
-      //    });
-      // }
-
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

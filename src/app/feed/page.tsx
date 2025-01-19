@@ -6,11 +6,13 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useGetAllVideos } from "@/hooks/api/videos/useGetAllVideos";
+import { useAuth } from "@/hooks/useAuth";
 
 const VIDEOS_PER_PAGE = 6;
 
 export default function Feed() {
    const [currentPage, setCurrentPage] = useState(1);
+   const { user } = useAuth();
 
    const { data, isPending, error } = useGetAllVideos({
       page: currentPage,
@@ -25,8 +27,9 @@ export default function Feed() {
       );
    }
 
-   const videos = data?.data || [];
-   const totalPages = Math.ceil(videos.length / VIDEOS_PER_PAGE);
+   const videos = data?.data.videos || [];
+   const totalVideos = data?.data.totalVideos || 0;
+   const totalPages = Math.ceil(totalVideos / VIDEOS_PER_PAGE);
 
    const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -58,10 +61,12 @@ export default function Feed() {
                         </div>
 
                         <div className="p-4">
-                           <h3 className="font-bold text-lg mb-2">
-                              {video.owner?.username}
-                           </h3>
-                           <p className="text-muted-foreground">{video.title}</p>
+                           <h3 className="font-bold text-lg mb-2">{video.title}</h3>
+                           <div className="text-muted-foreground">
+                              {video.owner?.username === user?.username
+                                 ? "You"
+                                 : `${video.owner?.username}`}
+                           </div>
                            <div className="mt-2 text-sm text-muted-foreground">
                               {Math.ceil(video.duration)} sec ·{" "}
                               {new Date(video.createdAt).toDateString()}
@@ -71,27 +76,29 @@ export default function Feed() {
                   ))}
                </div>
 
-               <div className="flex justify-between items-center mt-4">
-                  <Button
-                     onClick={prevPage}
-                     disabled={currentPage === 1 || isPending}
-                     className="yellow-accent-bg"
-                  >
-                     <ChevronLeft className="w-4 h-4 mr-2" />
-                     Previous
-                  </Button>
-                  <span>
-                     Page {currentPage} of {totalPages}
-                  </span>
-                  <Button
-                     onClick={nextPage}
-                     disabled={currentPage === totalPages || isPending}
-                     className="yellow-accent-bg"
-                  >
-                     Next
-                     <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
-               </div>
+               {totalPages > 1 && (
+                  <div className="flex justify-between items-center mt-4">
+                     <Button
+                        onClick={prevPage}
+                        disabled={currentPage === 1 || isPending}
+                        className="yellow-accent-bg"
+                     >
+                        <ChevronLeft className="w-4 h-4 mr-2" />
+                        Previous
+                     </Button>
+                     <span>
+                        Page {currentPage} of {totalPages}
+                     </span>
+                     <Button
+                        onClick={nextPage}
+                        disabled={currentPage === totalPages || isPending}
+                        className="yellow-accent-bg"
+                     >
+                        Next
+                        <ChevronRight className="w-4 h-4 ml-2" />
+                     </Button>
+                  </div>
+               )}
             </>
          )}
       </div>
