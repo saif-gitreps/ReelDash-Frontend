@@ -23,7 +23,7 @@ interface WatchHistoryResponse {
 
 const fetchWatchHistory = async (): Promise<WatchHistoryResponse> => {
    try {
-      const response = await apiClient.get("/api/users/watch-history");
+      const response = await apiClient.get("/api/v1/users/history");
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

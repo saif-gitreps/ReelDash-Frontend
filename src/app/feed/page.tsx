@@ -62,7 +62,13 @@ export default function Feed() {
 
                         <div className="p-4">
                            <h3 className="font-bold text-lg mb-2">{video.title}</h3>
-                           <div className="text-muted-foreground">
+                           <div className="text-muted-foreground flex gap-2">
+                              <Image
+                                 src={video.owner.avatar}
+                                 width={20}
+                                 height={10}
+                                 alt="Pfp"
+                              />
                               {video.owner?.username === user?.username
                                  ? "You"
                                  : `${video.owner?.username}`}

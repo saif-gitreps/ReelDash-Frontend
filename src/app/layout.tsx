@@ -31,7 +31,32 @@ export default function RootLayout({
             className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex`}
          >
             <ProviderWrapper>{children}</ProviderWrapper>
-            <Toaster />
+            <Toaster
+               toastOptions={{
+                  success: {
+                     iconTheme: {
+                        primary: "green",
+                        secondary: "white",
+                     },
+                     style: {
+                        background: "#4b4b4b",
+                        color: "white",
+                     },
+                     duration: 3000,
+                  },
+                  error: {
+                     iconTheme: {
+                        primary: "red",
+                        secondary: "white",
+                     },
+                     style: {
+                        background: "#4b4b4b",
+                        color: "white",
+                     },
+                     duration: 4000,
+                  },
+               }}
+            />
          </body>
       </html>
    );

@@ -5,6 +5,7 @@ import axios from "axios";
 interface VideoOwner {
    _id: string;
    username: string;
+   avatar: string;
 }
 
 interface Video {

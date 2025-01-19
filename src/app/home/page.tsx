@@ -6,6 +6,9 @@ import Video from "../components/video";
 import { Button } from "@/components/ui/button";
 import { BarChart2, ChevronUp, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { useGetAllVideos } from "@/hooks/api/videos/useGetAllVideos";
+import { useWatchHistory } from "@/hooks/api/users/useWatchHistory";
+import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
 
 const dummyVideos = [
    {
@@ -36,6 +39,12 @@ const dummyVideos = [
 
 export default function Home() {
    const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+   const { data: videosData, isLoading: isVideosLoading } = useGetAllVideos({
+      limit: 10,
+   });
+   const { data: userHistory, isLoading: isWatchHistoryLoading } = useWatchHistory();
+   const { mutate: AddVideosToWatchHistory } = useUpdateWatchHistory();
+   const [newHistory, setNewHistory] = useState<string[]>([]);
 
    const nextVideo = () =>
       setCurrentVideoIndex((prev) => (prev + 1) % dummyVideos.length);
@@ -48,6 +57,10 @@ export default function Home() {
       onSwipedUp: nextVideo,
       onSwipedDown: prevVideo,
    });
+
+   if (isVideosLoading || isWatchHistoryLoading) {
+      return <div className="text-center">loading videos..</div>;
+   }
 
    return (
       <div className="h-screen w-full overflow-hidden relative">
