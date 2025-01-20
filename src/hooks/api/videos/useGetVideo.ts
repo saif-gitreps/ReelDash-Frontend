@@ -2,19 +2,16 @@ import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
 
 interface VideoOwner {
-   _id: string;
    username: string;
    avatar: string;
 }
 
 interface VideoCommentOwner {
-   _id: string;
    username: string;
    avatar: string;
 }
 
 interface VideoComment {
-   _id: string;
    content: string;
    owner: VideoCommentOwner;
    createdAt: string;
@@ -22,15 +19,16 @@ interface VideoComment {
 
 interface Video {
    _id: string;
-   title: string;
-   description: string;
    videoFile: string;
    thumbnail: string;
-   duration: number;
-   createdAt: string;
    owner: VideoOwner;
-   commentsOnTheVideo: VideoComment[];
+   title: string;
+   duration: number;
+   views: number;
+   createdAt: string;
    numberOfLikes: number;
+   isLiked: boolean;
+   commentsOnTheVideo: VideoComment[];
 }
 
 interface GetVideoResponse {

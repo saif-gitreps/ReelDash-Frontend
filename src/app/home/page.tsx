@@ -1,87 +1,113 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { useSwipeable } from "react-swipeable";
 import Video from "../components/video";
 import { Button } from "@/components/ui/button";
 import { BarChart2, ChevronUp, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useGetAllVideos } from "@/hooks/api/videos/useGetAllVideos";
-import { useWatchHistory } from "@/hooks/api/users/useWatchHistory";
+import { useGetReelVideo } from "@/hooks/api/videos/useGetReelVideo";
 import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
-
-const dummyVideos = [
-   {
-      id: "1",
-      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      username: "user1",
-      description: "Never gonna give you up",
-      likes: 100,
-      comments: 50,
-   },
-   {
-      id: "2",
-      url: "https://www.youtube.com/watch?v=jNQXAC9IVRw",
-      username: "user2",
-      description: "Me at the zoo",
-      likes: 200,
-      comments: 75,
-   },
-   {
-      id: "3",
-      url: "https://www.youtube.com/watch?v=kJQP7kiw5Fk",
-      username: "user3",
-      description: "Despacito",
-      likes: 150,
-      comments: 60,
-   },
-];
+import { useWatchHistoryState } from "@/hooks/useWatchHistory";
+import { Video as VideoType } from "@/hooks/api/videos/useGetReelVideo";
 
 export default function Home() {
-   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-   const { data: videosData, isLoading: isVideosLoading } = useGetAllVideos({
-      limit: 10,
-   });
-   const { data: userHistory, isLoading: isWatchHistoryLoading } = useWatchHistory();
-   const { mutate: AddVideosToWatchHistory } = useUpdateWatchHistory();
-   const [newHistory, setNewHistory] = useState<string[]>([]);
+   const { data: reelVideo, isLoading, refetch } = useGetReelVideo();
+   const { current, history, pushToHistory, previous, next } = useWatchHistoryState();
+   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
 
-   const nextVideo = () =>
-      setCurrentVideoIndex((prev) => (prev + 1) % dummyVideos.length);
-   const prevVideo = () =>
-      setCurrentVideoIndex(
-         (prev) => (prev - 1 + dummyVideos.length) % dummyVideos.length
-      );
+   const isLoadingNext = useRef(false);
+   const pendingHistoryUpdate = useRef<VideoType[]>([]);
+
+   useEffect(() => {
+      const updateTimer = setTimeout(() => {
+         if (pendingHistoryUpdate.current.length > 0) {
+            const videoIds = pendingHistoryUpdate.current.map((vid) => vid._id);
+            updateWatchHistory({ videos: videoIds });
+            pendingHistoryUpdate.current = [];
+         }
+      }, 2000);
+
+      return () => clearTimeout(updateTimer);
+   }, [history, updateWatchHistory]);
+
+   useEffect(() => {
+      if (reelVideo?.data && !current) {
+         pushToHistory(reelVideo.data);
+         pendingHistoryUpdate.current.push(reelVideo.data);
+      }
+   }, [reelVideo, current, pushToHistory]);
+
+   useEffect(() => {
+      return () => {
+         if (pendingHistoryUpdate.current.length > 0) {
+            const videoIds = pendingHistoryUpdate.current.map((vid) => vid._id);
+            updateWatchHistory({ videos: videoIds });
+         }
+      };
+   }, [updateWatchHistory]);
+
+   const nextVideo = useCallback(async () => {
+      if (isLoadingNext.current) return;
+
+      if (next) {
+         pushToHistory(next);
+         pendingHistoryUpdate.current.push(next);
+      } else {
+         isLoadingNext.current = true;
+         try {
+            const { data } = await refetch();
+            if (data?.data) {
+               pushToHistory(data.data);
+               pendingHistoryUpdate.current.push(data.data);
+            }
+         } finally {
+            isLoadingNext.current = false;
+         }
+      }
+   }, [next, pushToHistory, refetch]);
+
+   const prevVideo = useCallback(() => {
+      if (previous) {
+         pushToHistory(previous);
+      }
+   }, [previous, pushToHistory]);
 
    const handlers = useSwipeable({
       onSwipedUp: nextVideo,
       onSwipedDown: prevVideo,
+      trackMouse: true,
    });
 
-   if (isVideosLoading || isWatchHistoryLoading) {
-      return <div className="text-center">loading videos..</div>;
+   if (isLoading || !current) {
+      return (
+         <div className="h-screen w-full flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900" />
+         </div>
+      );
    }
 
    return (
-      <div className="h-screen w-full overflow-hidden relative">
+      <div className="h-screen w-full overflow-hidden relative bg-black">
          <div {...handlers} className="h-full">
-            <Video {...dummyVideos[currentVideoIndex]} />
+            <Video video={current} />
          </div>
-         <Link href={`/video/${dummyVideos[currentVideoIndex].id}/stats`}>
+         <Link href={`/video/${current._id}/stats`}>
             <Button
                variant="ghost"
                size="icon"
-               className="absolute top-4 right-4 bg-black bg-opacity-50 text-white"
+               className="absolute top-4 right-4 bg-black bg-opacity-50 text-white hover:bg-opacity-75 z-10"
             >
                <BarChart2 className="h-6 w-6" />
             </Button>
          </Link>
-         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
             <Button
                variant="secondary"
                size="icon"
                onClick={prevVideo}
-               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75"
+               disabled={!previous}
+               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 disabled:opacity-30"
             >
                <ChevronUp className="h-6 w-6" />
             </Button>
@@ -89,7 +115,8 @@ export default function Home() {
                variant="secondary"
                size="icon"
                onClick={nextVideo}
-               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75"
+               disabled={isLoadingNext.current}
+               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 disabled:opacity-30"
             >
                <ChevronDown className="h-6 w-6" />
             </Button>
