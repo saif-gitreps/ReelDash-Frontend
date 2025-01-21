@@ -1,21 +1,14 @@
-"use client";
+import { useState, useEffect, useRef } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchReelVideo, Video } from "./api/videos/useGetReelVideo";
+import { useUpdateWatchHistory } from "./api/users/useUpdateWatchHistory";
 
-import { useEffect, useCallback, useRef, useState } from "react";
-import { useSwipeable } from "react-swipeable";
-import Video from "../components/video";
-import { Button } from "@/components/ui/button";
-import { BarChart2, ChevronUp, ChevronDown } from "lucide-react";
-import Link from "next/link";
-import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
-import { useWatchHistoryState } from "@/hooks/useWatchHistory";
-import { fetchReelVideo, Video as VideoType } from "@/hooks/api/videos/useGetReelVideo";
-import { useQuery } from "@tanstack/react-query";
-
-export default function Home() {
+export const useVideoPlayer = () => {
    const queryClient = useQueryClient();
    const [previousVideos, setPreviousVideos] = useState<Video[]>([]);
    const preloadVideoRef = useRef<HTMLVideoElement | null>(null);
 
+   // Current video query
    const {
       data: currentVideo,
       isLoading,
@@ -36,6 +29,10 @@ export default function Home() {
       enabled: false,
    });
 
+   // Watch history mutation
+   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
+
+   // Preload video function
    const preloadVideo = async (videoUrl: string) => {
       if (!preloadVideoRef.current) {
          preloadVideoRef.current = document.createElement("video");
@@ -52,6 +49,7 @@ export default function Home() {
       });
    };
 
+   // Load next video and preload another
    const loadNextVideo = async () => {
       // If we have a preloaded video, use it
       if (preloadedVideo) {
@@ -65,7 +63,7 @@ export default function Home() {
          queryClient.setQueryData(["preloadedVideo"], null);
 
          // Update watch history
-         watchHistoryMutation.mutate(preloadedVideo.id);
+         updateWatchHistory({preloadedVideo.data._id});
 
          // Fetch and preload next video
          fetchPreloadedVideo();
@@ -75,6 +73,7 @@ export default function Home() {
       }
    };
 
+   // Preload next video whenever preloadedVideo changes
    useEffect(() => {
       if (preloadedVideo?.url) {
          preloadVideo(preloadedVideo.url).catch(console.error);
@@ -95,48 +94,13 @@ export default function Home() {
       setPreviousVideos((prev) => prev.slice(0, -1));
    };
 
-   if (isLoading) {
-      return (
-         <div className="h-screen w-full flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900" />
-         </div>
-      );
-   }
-
-   return (
-      <div className="h-screen w-full overflow-hidden relative bg-black">
-         <div {...handlers} className="h-full">
-            <Video video={current} />
-         </div>
-         <Link href={`/video/${current._id}/stats`}>
-            <Button
-               variant="ghost"
-               size="icon"
-               className="absolute top-4 right-4 bg-black bg-opacity-50 text-white hover:bg-opacity-75 z-10"
-            >
-               <BarChart2 className="h-6 w-6" />
-            </Button>
-         </Link>
-         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
-            <Button
-               variant="secondary"
-               size="icon"
-               onClick={prevVideo}
-               disabled={!previous}
-               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 disabled:opacity-30"
-            >
-               <ChevronUp className="h-6 w-6" />
-            </Button>
-            <Button
-               variant="secondary"
-               size="icon"
-               onClick={nextVideo}
-               disabled={}
-               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 disabled:opacity-30"
-            >
-               <ChevronDown className="h-6 w-6" />
-            </Button>
-         </div>
-      </div>
-   );
-}
+   return {
+      currentVideo,
+      isLoading,
+      error,
+      loadNextVideo,
+      loadPreviousVideo,
+      hasPrevious: previousVideos.length > 0,
+      isPreloading: !!preloadedVideo,
+   };
+};

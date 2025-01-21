@@ -1,5 +1,5 @@
 import apiClient from "@/lib/api-client";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+// import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 
 interface VideoOwner {
@@ -37,7 +37,7 @@ interface GetReelVideoResponse {
    message: string;
 }
 
-const fetchReelVideo = async (): Promise<GetReelVideoResponse> => {
+export const fetchReelVideo = async (): Promise<GetReelVideoResponse> => {
    try {
       const { data } = await apiClient.get("/api/v1/videos/reel/random");
       return data;
@@ -49,9 +49,16 @@ const fetchReelVideo = async (): Promise<GetReelVideoResponse> => {
    }
 };
 
-export const useGetReelVideo = (): UseQueryResult<GetReelVideoResponse, Error> => {
-   return useQuery<GetReelVideoResponse, Error>({
-      queryKey: ["reelVideo"],
-      queryFn: fetchReelVideo,
-   });
-};
+// export const currentReel = (): UseQueryResult<GetReelVideoResponse, Error> => {
+//    return useQuery<GetReelVideoResponse, Error>({
+//       queryKey: ["currentReel"],
+//       queryFn: fetchReelVideo,
+//    });
+// };
+
+// export const preLoadedReel = (): UseQueryResult<GetReelVideoResponse, Error> => {
+//    return useQuery<GetReelVideoResponse, Error>({
+//       queryKey: ["preLoadedReel"],
+//       queryFn: fetchReelVideo,
+//    });
+// };

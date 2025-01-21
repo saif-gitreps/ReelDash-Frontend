@@ -11,7 +11,14 @@ export default function ProviderWrapper({
    children: React.ReactNode;
 }>) {
    const pathname = usePathname();
-   const queryClient = new QueryClient();
+   const queryClient = new QueryClient({
+      defaultOptions: {
+         queries: {
+            retry: 1,
+            refetchOnWindowFocus: false,
+         },
+      },
+   });
 
    return (
       <QueryClientProvider client={queryClient}>
