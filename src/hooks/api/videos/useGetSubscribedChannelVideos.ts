@@ -40,7 +40,9 @@ const fetchSubscribedChannelsVideos = async (
    params: GetSubscribedChannelsVideosParams
 ): Promise<GetSubscribedChannelsVideosResponse> => {
    try {
-      const response = await apiClient.get("/api/v1/videos/subscriptions", { params });
+      const response = await apiClient.get("/api/v1/videos/subscriptions/all", {
+         params,
+      });
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

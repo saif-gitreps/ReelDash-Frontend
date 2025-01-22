@@ -3,7 +3,7 @@ import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
 
 interface UpdateWatchHistoryBody {
-   videos: string[]; // Array of video IDs to add to the watch history
+   videoId: string;
 }
 
 interface UpdateWatchHistoryResponse {

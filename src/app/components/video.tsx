@@ -116,7 +116,7 @@ export default function Video({ video }: VideoProps) {
 // Subcomponents
 interface ActionButtonProps {
    Icon: any;
-   isActive: boolean;
+   isActive?: boolean;
    count?: number;
    onClick: () => void;
 }

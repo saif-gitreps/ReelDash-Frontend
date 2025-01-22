@@ -117,7 +117,9 @@ export default function Updates() {
                                     className="rounded-full"
                                  />
 
-                                 <div>{update.ownerDetails.username}</div>
+                                 <div>
+                                    {update.ownerDetails.username == user?.username}
+                                 </div>
                               </div>
                               <div className="text-xs text-gray-300">
                                  {formatDate(update.createdAt)}
