@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 interface VideoOwner {
    username: string;
@@ -38,8 +39,17 @@ interface GetVideoResponse {
 }
 
 const fetchVideo = async (videoId: string): Promise<GetVideoResponse> => {
-   const { data } = await apiClient.get(`/api/videos/${videoId}`);
-   return data;
+   try {
+      const { data } = await apiClient.get(`/api/v1/videos/${videoId}`);
+      return data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(
+            error.response.data.message || "An error occurred while fetching video"
+         );
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
 export const useGetVideo = (videoId: string) => {

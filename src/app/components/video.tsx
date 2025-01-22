@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Share2, X, Bookmark } from "lucide-react";
+import { Heart, MessageCircle, Share2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Video as VideoType } from "@/hooks/api/videos/useGetReelVideo";
@@ -10,6 +10,10 @@ import Image from "next/image";
 import { useLikeUnlikeVideo } from "@/hooks/api/videos/useToggleLike";
 import { useCreateCommentOnVideo } from "@/hooks/api/comments/useCreateComment";
 import { useDeleteComment } from "@/hooks/api/comments/useDeleteComment";
+import Link from "next/link";
+import { useIsLiked } from "@/hooks/api/videos/useIsLikedVideo";
+import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface VideoProps {
    video: VideoType;
@@ -18,24 +22,42 @@ interface VideoProps {
 export default function Video({ video }: VideoProps) {
    const [showComments, setShowComments] = useState(false);
    const [newComment, setNewComment] = useState("");
-   const [isSaved, setIsSaved] = useState(false);
+   const queryClient = useQueryClient();
 
-   const { mutate: likeVideo } = useLikeUnlikeVideo();
+   const { data: isLiked } = useIsLiked(video._id);
+   const { mutate: toggleLike } = useLikeUnlikeVideo();
    const { mutate: addComment } = useCreateCommentOnVideo();
    const { mutate: deleteComment } = useDeleteComment();
 
-   const handleLike = () => {
-      likeVideo(video._id);
+   const handleTogggleLike = () => {
+      toggleLike(video._id, {
+         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["isLiked", video._id] });
+         },
+         onError: (error) => {
+            toast.error("Error while toggling like on the video," + error.message);
+         },
+      });
    };
 
    const handleAddComment = () => {
       if (newComment.trim()) {
-         addComment({
-            videoId: video._id,
-            data: {
-               content: newComment.trim(),
+         addComment(
+            {
+               videoId: video._id,
+               data: {
+                  content: newComment.trim(),
+               },
             },
-         });
+            {
+               onSuccess: () => {
+                  queryClient.invalidateQueries({ queryKey: ["getVideo", video._id] });
+               },
+               onError: (error) => {
+                  toast.error("Error while adding comment," + error.message);
+               },
+            }
+         );
          setNewComment("");
       }
    };
@@ -44,24 +66,23 @@ export default function Video({ video }: VideoProps) {
       deleteComment(commentId);
    };
 
-   const handleSave = () => {
-      setIsSaved(!isSaved);
-      // TODO: Implement save video mutation
-   };
-
    return (
       <div className="relative w-full h-screen bg-background">
          <video
             src={video.videoFile}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
             loop
             autoPlay
             muted
             playsInline
             controls={false}
+            onClick={() =>
+               // Pause the video when clicked
+               // TODO: Implement video player controls
+               console.log("Video clicked")
+            }
          />
 
-         {/* Video Info */}
          <div className="absolute bottom-0 left-0 p-4 text-white bg-gradient-to-t from-black/60 to-transparent w-full">
             <div className="flex items-center space-x-2 mb-2">
                <Image
@@ -71,7 +92,12 @@ export default function Video({ video }: VideoProps) {
                   width={8}
                   height={8}
                />
-               <h2 className="text-lg font-bold">{video.owner.username}</h2>
+               <h2 className="text-lg font-bold hover:opacity-70">
+                  @
+                  <Link href={`/profile/${video.owner.username}`}>
+                     {video.owner.username}
+                  </Link>
+               </h2>
             </div>
             <p className="text-sm">{video.title}</p>
          </div>
@@ -80,9 +106,9 @@ export default function Video({ video }: VideoProps) {
          <div className="absolute right-4 bottom-20 flex flex-col items-center space-y-4">
             <ActionButton
                Icon={Heart}
-               isActive={video.isLiked}
+               isActive={isLiked?.data}
                count={video.numberOfLikes}
-               onClick={handleLike}
+               onClick={handleTogggleLike}
             />
             <ActionButton
                Icon={MessageCircle}
@@ -93,12 +119,13 @@ export default function Video({ video }: VideoProps) {
             <ActionButton
                Icon={Share2}
                isActive={false}
-               onClick={() => {}} // TODO: Implement share
+               onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast.success("Link copied to clipboard");
+               }}
             />
-            <ActionButton Icon={Bookmark} isActive={isSaved} onClick={handleSave} />
          </div>
 
-         {/* Comments Section */}
          {showComments && (
             <CommentsSection
                comments={video.commentsOnTheVideo}
@@ -130,9 +157,9 @@ function ActionButton({ Icon, isActive, count, onClick }: ActionButtonProps) {
             onClick={onClick}
             className="text-white hover:text-white/80"
          >
-            <Icon className={`h-6 w-6 ${isActive ? "fill-current" : ""}`} />
+            <Icon className={`${isActive ? "fill-current" : ""}`} size={28} />
          </Button>
-         {count !== undefined && <span className="text-white text-sm">{count}</span>}
+         {count !== undefined && <span className="text-white text-base">{count}</span>}
       </div>
    );
 }
