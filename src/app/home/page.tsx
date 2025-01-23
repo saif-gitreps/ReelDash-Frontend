@@ -8,8 +8,24 @@ import Link from "next/link";
 
 import { useState } from "react";
 import { useVideoPlayer } from "@/hooks/useVideoPlayer";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Home() {
+   const { isAuthenticated } = useAuth();
+
+   const [isTransitioning, setIsTransitioning] = useState(false);
+   if (!isAuthenticated) {
+      return (
+         <div className="h-screen w-full flex items-center justify-center bg-black text-white">
+            <div className="text-center">
+               <h2 className="text-xl font-semibold mb-2">
+                  Please login to scroll reels.
+               </h2>
+            </div>
+         </div>
+      );
+   }
+
    const {
       currentVideo,
       isLoading: isInitialLoading,
@@ -18,8 +34,6 @@ export default function Home() {
       hasPrevious,
       isPreloading,
    } = useVideoPlayer();
-
-   const [isTransitioning, setIsTransitioning] = useState(false);
 
    const handleNextVideo = async () => {
       if (!isPreloading) {

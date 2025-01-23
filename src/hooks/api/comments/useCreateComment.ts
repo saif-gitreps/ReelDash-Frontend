@@ -26,11 +26,13 @@ const createCommentOnVideo = async (
    data: CreateCommentBody
 ): Promise<CreateCommentResponse> => {
    try {
-      const response = await apiClient.post(`/api/v1/comment/video/${videoId}`, data);
+      const response = await apiClient.post(`/api/v1/comments/video/${videoId}`, data);
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occurred while adding comment"
+         );
       }
       throw new Error("Network error occurred");
    }

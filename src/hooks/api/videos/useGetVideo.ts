@@ -13,6 +13,7 @@ interface VideoCommentOwner {
 }
 
 interface VideoComment {
+   _id: string;
    content: string;
    owner: VideoCommentOwner;
    createdAt: string;
