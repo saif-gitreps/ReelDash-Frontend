@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIsLiked } from "@/hooks/api/videos/useIsLikedVideo";
 import { useAuth } from "@/hooks/useAuth";
+import EnhancedVideo from "./EnhancedVideo";
 
 interface VideoProps {
    video: VideoType;
@@ -83,15 +84,7 @@ export default function Video({ video }: VideoProps) {
 
    return (
       <div className="relative w-full h-screen bg-background">
-         <video
-            src={video.videoFile}
-            className="w-full h-full object-contain"
-            loop
-            autoPlay
-            muted
-            playsInline
-            controls={false}
-         />
+         <EnhancedVideo src={video.videoFile} />
 
          <div className="absolute bottom-0 left-0 p-4 text-white bg-gradient-to-t from-black/60 to-transparent w-full">
             <div className="flex items-center space-x-2 mb-2">
@@ -206,7 +199,7 @@ function CommentsSection({
    username,
 }: CommentsSectionProps) {
    return (
-      <div className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm p-4 h-2/3 rounded-t-xl">
+      <div className="absolute bottom-0 z-20 left-0 right-0 bg-background/95 backdrop-blur-sm p-4 h-2/3 rounded-t-xl">
          <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-foreground">Comments</h3>
             <Button
