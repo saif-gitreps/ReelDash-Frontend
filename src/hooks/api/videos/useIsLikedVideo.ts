@@ -4,7 +4,7 @@ import axios from "axios";
 
 interface IsLikedResponse {
    statusCode: number;
-   data: boolean; // `true` if the video is liked, `false` otherwise
+   data: boolean;
    message: string;
 }
 

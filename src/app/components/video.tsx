@@ -11,12 +11,13 @@ import { useLikeUnlikeVideo } from "@/hooks/api/videos/useToggleLike";
 import { useCreateCommentOnVideo } from "@/hooks/api/comments/useCreateComment";
 import { useDeleteComment } from "@/hooks/api/comments/useDeleteComment";
 import Link from "next/link";
-
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIsLiked } from "@/hooks/api/videos/useIsLikedVideo";
 import { useAuth } from "@/hooks/useAuth";
 import EnhancedVideo from "./EnhancedVideo";
+import { Comment, useGetCommentsOnVideo } from "@/hooks/api/comments/useGetComments";
+import { useGetLikesOnAVideo } from "@/hooks/api/videos/useGetLikesOnVideo";
 
 interface VideoProps {
    video: VideoType;
@@ -29,6 +30,8 @@ export default function Video({ video }: VideoProps) {
    const { isAuthenticated, user } = useAuth();
 
    const { data: isLiked } = useIsLiked(video._id);
+   const { data: comments } = useGetCommentsOnVideo(video._id);
+   const { data: likesCount } = useGetLikesOnAVideo(video._id);
    const { mutate: toggleLike, isPending: isToggleLikePending } = useLikeUnlikeVideo();
    const { mutate: addComment, isPending: isAddCommentPending } =
       useCreateCommentOnVideo();
@@ -39,7 +42,7 @@ export default function Video({ video }: VideoProps) {
       toggleLike(video._id, {
          onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["isLiked", video._id] });
-            queryClient.invalidateQueries({ queryKey: ["getVideo", video._id] });
+            queryClient.invalidateQueries({ queryKey: ["likesOnVideo", video._id] });
          },
          onError: (error) => {
             toast.error(`Error toggling like: ${error.message}`);
@@ -58,7 +61,9 @@ export default function Video({ video }: VideoProps) {
          },
          {
             onSuccess: () => {
-               queryClient.invalidateQueries({ queryKey: ["getVideo", video._id] });
+               queryClient.invalidateQueries({
+                  queryKey: ["commentsOnVideo", video._id],
+               });
                setNewComment("");
             },
             onError: (error) => {
@@ -73,7 +78,7 @@ export default function Video({ video }: VideoProps) {
 
       deleteComment(commentId, {
          onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["getVideo", video._id] });
+            queryClient.invalidateQueries({ queryKey: ["commentsOnVideo", video._id] });
             toast.success("Comment deleted successfully");
          },
          onError: (error) => {
@@ -105,19 +110,19 @@ export default function Video({ video }: VideoProps) {
             <p className="text-sm">{video.title}</p>
          </div>
 
-         <div className="absolute right-4 bottom-20 flex flex-col items-center space-y-4">
+         <div className="absolute right-4 bottom-10 flex flex-col items-center space-y-1">
             <ActionButton
                Icon={Heart}
                isActive={isLiked?.data}
                isDisabled={isToggleLikePending || !isAuthenticated}
-               count={video.numberOfLikes}
+               count={likesCount?.data}
                onClick={handleToggleLike}
             />
 
             <ActionButton
                Icon={MessageCircle}
                isActive={showComments}
-               count={video.commentsOnTheVideo.length}
+               count={comments?.data?.length}
                onClick={() => setShowComments(true)}
             />
 
@@ -132,7 +137,7 @@ export default function Video({ video }: VideoProps) {
 
          {showComments && (
             <CommentsSection
-               comments={video.commentsOnTheVideo}
+               comments={comments?.data || []}
                onClose={() => setShowComments(false)}
                onAddComment={handleAddComment}
                onDeleteComment={handleDeleteComment}
@@ -166,7 +171,7 @@ function ActionButton({ Icon, isActive, count, onClick, isDisabled }: ActionButt
             disabled={isDisabled}
             className="text-white hover:text-white/80"
          >
-            <Icon className={isActive ? "fill-current" : ""} size={32} />
+            <Icon className={isActive ? "fill-red-500" : ""} size={32} />
          </Button>
          {count !== undefined && <span className="text-white text-base">{count}</span>}
       </div>
@@ -174,7 +179,7 @@ function ActionButton({ Icon, isActive, count, onClick, isDisabled }: ActionButt
 }
 
 interface CommentsSectionProps {
-   comments: VideoType["commentsOnTheVideo"];
+   comments: Comment[];
    onClose: () => void;
    onAddComment: () => void;
    onDeleteComment: (id: string) => void;
@@ -199,7 +204,7 @@ function CommentsSection({
    username,
 }: CommentsSectionProps) {
    return (
-      <div className="absolute bottom-0 z-20 left-0 right-0 bg-background/95 backdrop-blur-sm p-4 h-2/3 rounded-t-xl">
+      <div className="absolute bottom-0 z-40 left-0 right-0 bg-background/95 backdrop-blur-sm p-4 h-2/3 rounded-t-xl">
          <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-foreground">Comments</h3>
             <Button
@@ -248,27 +253,28 @@ function CommentsSection({
          </ScrollArea>
 
          <div className="flex gap-2">
+            <Input
+               placeholder={
+                  isAuthenticated ? "Add a comment..." : "Login to add a comment"
+               }
+               value={newComment}
+               disabled={!isAuthenticated}
+               onChange={(e) => setNewComment(e.target.value)}
+               className="flex-grow"
+               onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey && !isAddCommentPending) {
+                     e.preventDefault();
+                     onAddComment();
+                  }
+               }}
+            />
             {isAuthenticated && (
-               <>
-                  <Input
-                     placeholder="Add a comment..."
-                     value={newComment}
-                     onChange={(e) => setNewComment(e.target.value)}
-                     className="flex-grow"
-                     onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey && !isAddCommentPending) {
-                           e.preventDefault();
-                           onAddComment();
-                        }
-                     }}
-                  />
-                  <Button
-                     onClick={onAddComment}
-                     disabled={isAddCommentPending || !newComment.trim()}
-                  >
-                     Post
-                  </Button>
-               </>
+               <Button
+                  onClick={onAddComment}
+                  disabled={isAddCommentPending || !newComment.trim()}
+               >
+                  Post
+               </Button>
             )}
          </div>
       </div>

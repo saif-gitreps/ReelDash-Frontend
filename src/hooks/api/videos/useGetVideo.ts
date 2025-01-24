@@ -7,18 +7,6 @@ interface VideoOwner {
    avatar: string;
 }
 
-interface VideoCommentOwner {
-   username: string;
-   avatar: string;
-}
-
-interface VideoComment {
-   _id: string;
-   content: string;
-   owner: VideoCommentOwner;
-   createdAt: string;
-}
-
 interface Video {
    _id: string;
    videoFile: string;
@@ -28,9 +16,6 @@ interface Video {
    duration: number;
    views: number;
    createdAt: string;
-   numberOfLikes: number;
-   isLiked: boolean;
-   commentsOnTheVideo: VideoComment[];
 }
 
 interface GetVideoResponse {
@@ -42,6 +27,7 @@ interface GetVideoResponse {
 const fetchVideo = async (videoId: string): Promise<GetVideoResponse> => {
    try {
       const { data } = await apiClient.get(`/api/v1/videos/${videoId}`);
+      console.log(data);
       return data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

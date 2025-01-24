@@ -58,19 +58,21 @@ export default function Home() {
 
    if (isInitialLoading) {
       return (
-         <div className="h-screen w-full flex items-center justify-center bg-black">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900" />
+         <div className="h-screen w-full flex items-center justify-center bg-black text-white">
+            <div className="text-center">
+               <h2 className="text-xl font-semibold mb-2">
+                  Loading <span className="animate-ping text-bold text-4xl">...</span>
+               </h2>
+            </div>
          </div>
       );
    }
 
-   // Make sure we check for both currentVideo and currentVideo.data
    if (!currentVideo || !currentVideo.data) {
       return (
          <div className="h-screen w-full flex items-center justify-center bg-black text-white">
             <div className="text-center">
-               <h2 className="text-xl font-semibold mb-2">No videos available</h2>
-               <p className="text-gray-400">Try again later</p>
+               <div className="text-xl font-semibold">No videos available.</div>
             </div>
          </div>
       );
@@ -82,8 +84,13 @@ export default function Home() {
             <Video video={currentVideo.data} />
 
             {isTransitioning && (
-               <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white" />
+               <div className="h-screen w-full flex items-center justify-center bg-black text-white">
+                  <div className="text-center">
+                     <div className="text-xl font-semibold mb-2">
+                        Loading{" "}
+                        <span className="animate-ping text-bold text-4xl">...</span>
+                     </div>
+                  </div>
                </div>
             )}
          </div>
@@ -98,35 +105,29 @@ export default function Home() {
             </Button>
          </Link>
 
-         <div className="absolute left-0 top-1/2 transform -translate-y-1/2 flex space-x-4 z-10">
+         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex space-x-4 z-10">
             <Button
-               variant="secondary"
-               size="lg"
+               variant="default"
+               size="icon"
                onClick={handlePreviousVideo}
                disabled={!hasPrevious}
-               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 disabled:opacity-30 text-2xl"
+               className="rounded-full opacity-55 hover:bg-opacity-75 disabled:opacity-30 text-4xl"
             >
-               <ChevronLeft className="h-20 w-20" />
+               <ChevronLeft className="h-40 w-40" />
             </Button>
          </div>
 
-         <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex space-x-4 z-10">
+         <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex space-x-4 z-10">
             <Button
-               variant="secondary"
-               size="lg"
+               variant="default"
+               size="icon"
                onClick={handleNextVideo}
                disabled={isTransitioning}
-               className="rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 disabled:opacity-30"
+               className="rounded-full opacity-55 hover:bg-opacity-75 disabled:opacity-30"
             >
                <ChevronRight className="h-24 w-24" />
             </Button>
          </div>
-
-         {isPreloading && !isTransitioning && (
-            <div className="absolute top-4 left-4 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">
-               Next video ready
-            </div>
-         )}
       </div>
    );
 }

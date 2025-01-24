@@ -8,12 +8,26 @@ import { useGetVideo } from "@/hooks/api/videos/useGetVideo";
 export default function SingleVideo() {
    const params = useParams();
    const videoId = params.id as string;
-   const { data: video } = useGetVideo(videoId);
+   const { data: video, isLoading } = useGetVideo(videoId);
+
+   if (isLoading) {
+      return (
+         <div className="h-screen w-full flex items-center justify-center bg-black text-white">
+            <div className="text-center">
+               <div className="text-xl font-semibold mb-2">
+                  Loading <span className="animate-ping text-bold text-4xl">...</span>
+               </div>
+            </div>
+         </div>
+      );
+   }
 
    if (!video) {
       return (
-         <div className="text-center">
-            <h2 className="text-xl font-semibold mt-10">No such video</h2>
+         <div className="h-screen w-full flex items-center justify-center bg-black text-white">
+            <div className="text-center">
+               <div className="text-xl font-semibold">No such video</div>
+            </div>
          </div>
       );
    }

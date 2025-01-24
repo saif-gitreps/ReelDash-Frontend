@@ -7,18 +7,6 @@ interface VideoOwner {
    avatar: string;
 }
 
-interface VideoCommentOwner {
-   username: string;
-   avatar: string;
-}
-
-interface VideoComment {
-   _id: string;
-   content: string;
-   owner: VideoCommentOwner;
-   createdAt: string;
-}
-
 export interface Video {
    _id: string;
    videoFile: string;
@@ -28,8 +16,6 @@ export interface Video {
    duration: number;
    views: number;
    createdAt: string;
-   numberOfLikes: number;
-   commentsOnTheVideo: VideoComment[];
 }
 
 interface GetReelVideoResponse {

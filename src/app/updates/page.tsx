@@ -118,7 +118,9 @@ export default function Updates() {
                                  />
 
                                  <div>
-                                    {update.ownerDetails.username == user?.username}
+                                    {update.ownerDetails.username == user?.username
+                                       ? "You"
+                                       : update.ownerDetails.username}
                                  </div>
                               </div>
                               <div className="text-xs text-gray-300">
