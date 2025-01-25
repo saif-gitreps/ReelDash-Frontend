@@ -20,7 +20,7 @@ const updateUserAvatar = async (avatar: File): Promise<UpdateUserAvatarResponse>
       const formData = new FormData();
       formData.append("avatar", avatar);
 
-      const response = await apiClient.post("/api/users/update-avatar", formData, {
+      const response = await apiClient.patch("/api/v1/users/avatar", formData, {
          headers: { "Content-Type": "multipart/form-data" },
       });
       return response.data;

@@ -1,18 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useGetAllVideos } from "@/hooks/api/videos/useGetAllVideos";
-import { useAuth } from "@/hooks/useAuth";
+import FeedVideoCard from "../components/FeedVideoCard";
 
 const VIDEOS_PER_PAGE = 6;
 
 export default function Feed() {
    const [currentPage, setCurrentPage] = useState(1);
-   const { user } = useAuth();
 
    const { data, isPending, error } = useGetAllVideos({
       page: currentPage,
@@ -46,39 +43,7 @@ export default function Feed() {
 
                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                   {videos.map((video) => (
-                     <Link
-                        href={`/video/${video._id}`}
-                        key={video._id}
-                        className="bg-secondary rounded-lg shadow-md overflow-hidden"
-                     >
-                        <div className="relative h-48">
-                           <Image
-                              src={video.thumbnail}
-                              alt={video.title}
-                              layout="fill"
-                              objectFit="cover"
-                           />
-                        </div>
-
-                        <div className="p-4">
-                           <h3 className="font-bold text-lg mb-2">{video.title}</h3>
-                           <div className="text-muted-foreground flex gap-2">
-                              <Image
-                                 src={video.owner.avatar}
-                                 width={20}
-                                 height={10}
-                                 alt="Pfp"
-                              />
-                              {video.owner?.username === user?.username
-                                 ? "You"
-                                 : `${video.owner?.username}`}
-                           </div>
-                           <div className="mt-2 text-sm text-muted-foreground">
-                              {Math.ceil(video.duration)} sec ·{" "}
-                              {new Date(video.createdAt).toDateString()}
-                           </div>
-                        </div>
-                     </Link>
+                     <FeedVideoCard video={video} key={video._id} />
                   ))}
                </div>
 

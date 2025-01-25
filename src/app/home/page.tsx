@@ -1,7 +1,7 @@
 "use client";
 
 import { useSwipeable } from "react-swipeable";
-import Video from "../components/video";
+import Video from "../components/Video";
 import { Button } from "@/components/ui/button";
 import { BarChart2, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useVideoPlayer } from "@/hooks/useVideoPlayer";
 import { useAuth } from "@/hooks/useAuth";
+import Loading from "../components/Loading";
 
 export default function Home() {
    const { isAuthenticated } = useAuth();
@@ -57,15 +58,7 @@ export default function Home() {
    }
 
    if (isInitialLoading) {
-      return (
-         <div className="h-screen w-full flex items-center justify-center bg-black text-white">
-            <div className="text-center">
-               <h2 className="text-xl font-semibold mb-2">
-                  Loading <span className="animate-ping text-bold text-4xl">...</span>
-               </h2>
-            </div>
-         </div>
-      );
+      return <Loading />;
    }
 
    if (!currentVideo || !currentVideo.data) {

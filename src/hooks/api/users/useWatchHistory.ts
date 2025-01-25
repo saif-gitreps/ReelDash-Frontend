@@ -4,7 +4,6 @@ import axios from "axios";
 
 interface VideoOwner {
    username: string;
-   fullname: string;
    avatar: string;
 }
 
@@ -12,18 +11,29 @@ interface WatchHistoryItem {
    _id: string;
    title: string;
    description: string;
+   thumbnail: string;
    owner: VideoOwner;
 }
 
 interface WatchHistoryResponse {
    statusCode: number;
-   data: WatchHistoryItem[];
+   data: {
+      watchHistory: WatchHistoryItem[];
+      totalWatchHistoryItems: number;
+   };
    message: string;
 }
 
-const fetchWatchHistory = async (): Promise<WatchHistoryResponse> => {
+interface WatchHistoryParams {
+   page?: number;
+   limit?: number;
+}
+
+const fetchWatchHistory = async (
+   params: WatchHistoryParams
+): Promise<WatchHistoryResponse> => {
    try {
-      const response = await apiClient.get("/api/v1/users/history");
+      const response = await apiClient.get("/api/v1/users/history", { params });
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -35,9 +45,9 @@ const fetchWatchHistory = async (): Promise<WatchHistoryResponse> => {
    }
 };
 
-export const useWatchHistory = () => {
+export const useWatchHistory = (params: WatchHistoryParams) => {
    return useQuery<WatchHistoryResponse, Error>({
-      queryKey: ["watchHistory"],
-      queryFn: fetchWatchHistory,
+      queryKey: ["watchHistory", params],
+      queryFn: () => fetchWatchHistory(params),
    });
 };

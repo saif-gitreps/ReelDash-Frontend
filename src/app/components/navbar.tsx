@@ -23,7 +23,7 @@ export default function Navbar() {
       <nav className="fixed left-0 top-0 h-full w-12 md:w-32 bg-secondary border-r border-border flex flex-col items-center md:items-start py-4 z-50">
          <Link
             href="/home"
-            className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+            className={`flex items-center justify-center md:justify-start gap-2 p-2 md:px-3 w-full ${
                pathname === "/home" ? "yellow-accent" : "text-muted-foreground"
             }`}
          >
@@ -32,7 +32,7 @@ export default function Navbar() {
          </Link>
          <Link
             href="/feed"
-            className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+            className={`flex items-center justify-center md:justify-start gap-2 p-2 md:px-3 w-full ${
                pathname === "/feed" ? "yellow-accent" : "text-muted-foreground"
             }`}
          >
@@ -43,7 +43,7 @@ export default function Navbar() {
          {isAuthenticated && (
             <Link
                href="/subscriptions"
-               className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+               className={`flex items-center justify-center md:justify-start gap-2 p-2 md:px-3 w-full ${
                   pathname === "/subscriptions"
                      ? "yellow-accent"
                      : "text-muted-foreground"
@@ -57,7 +57,7 @@ export default function Navbar() {
          {!isAuthenticated && (
             <Link
                href="/login"
-               className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+               className={`flex items-center justify-center md:justify-start gap-2 p-2 md:px-3 w-full ${
                   pathname === "/login" ? "yellow-accent" : "text-muted-foreground"
                }`}
             >
@@ -69,7 +69,7 @@ export default function Navbar() {
          {isAuthenticated && (
             <Link
                href="/updates"
-               className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+               className={`flex items-center justify-center md:justify-start gap-2 p-2 md:px-3 w-full ${
                   pathname === "/updates" ? "yellow-accent" : "text-muted-foreground"
                }`}
             >
@@ -81,7 +81,7 @@ export default function Navbar() {
          {isAuthenticated && (
             <Link
                href={`/profile/${user?.username}`}
-               className={`flex items-center gap-2 p-2 md:px-3 w-full ${
+               className={`flex items-center justify-center md:justify-start gap-2 p-2 md:px-3 w-full ${
                   pathname.startsWith("/profile")
                      ? "yellow-accent"
                      : "text-muted-foreground"
@@ -93,10 +93,10 @@ export default function Navbar() {
          )}
 
          {isAuthenticated && (
-            <div className="mt-auto flex items-center gap-2 w-p-2 md:px-3 w-full">
+            <div className="mt-auto items-center gap-2 w-p-2 md:px-3 w-full">
                <Button
                   variant="ghost"
-                  className="w-full justify-start text-muted-foreground hover:text-primary hover:bg-red-700"
+                  className="w-full text-muted-foreground hover:text-primary hover:bg-red-700"
                   onClick={handleLogout}
                >
                   <LogOut className="h-5 w-5 md:h-6 md:w-6" />

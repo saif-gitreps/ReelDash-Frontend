@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar";
 import { usePublishAVideo } from "@/hooks/api/videos/usePublishAVideo";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";

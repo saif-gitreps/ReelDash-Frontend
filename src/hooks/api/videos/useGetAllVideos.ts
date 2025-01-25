@@ -8,13 +8,14 @@ interface VideoOwner {
    avatar: string;
 }
 
-interface Video {
+export interface Video {
    _id: string;
    videoFile: string;
    thumbnail: string;
    owner: VideoOwner;
    title: string;
    duration: number;
+   views: number;
    createdAt: string;
 }
 
@@ -26,7 +27,7 @@ interface GetAllVideosResponse {
    };
    message: string;
 }
-interface GetAllVideosBody {
+interface GetAllVideosParams {
    page?: number;
    limit?: number;
    query?: string;
@@ -36,9 +37,11 @@ interface GetAllVideosBody {
    username?: string; // getting username from the params
 }
 
-const fetchAllVideos = async (data: GetAllVideosBody): Promise<GetAllVideosResponse> => {
+const fetchAllVideos = async (
+   params: GetAllVideosParams
+): Promise<GetAllVideosResponse> => {
    try {
-      const response = await apiClient.get("/api/v1/videos", { params: data });
+      const response = await apiClient.get("/api/v1/videos", { params });
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -50,7 +53,7 @@ const fetchAllVideos = async (data: GetAllVideosBody): Promise<GetAllVideosRespo
    }
 };
 
-export const useGetAllVideos = (params: GetAllVideosBody) => {
+export const useGetAllVideos = (params: GetAllVideosParams) => {
    return useQuery<GetAllVideosResponse, Error>({
       queryKey: ["getAllVideos", params],
       queryFn: () => fetchAllVideos(params),

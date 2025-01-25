@@ -22,9 +22,10 @@ const updateUserCoverImage = async (
       const formData = new FormData();
       formData.append("coverImage", coverImage);
 
-      const response = await apiClient.post("/api/users/update-cover-image", formData, {
+      const response = await apiClient.patch("/api/v1/users/cover-image", formData, {
          headers: { "Content-Type": "multipart/form-data" },
       });
+
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

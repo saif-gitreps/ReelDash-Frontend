@@ -15,7 +15,7 @@ interface ChangeCurrentPasswordResponse {
 const changeCurrentPassword = async (
    data: ChangeCurrentPasswordBody
 ): Promise<ChangeCurrentPasswordResponse> => {
-   const response = await apiClient.post("/api/users/change-password", data);
+   const response = await apiClient.post("/api/v1/users/change-password", data);
    return response.data;
 };
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Video from "../../components/video";
-import Navbar from "../../components/navbar";
+import Video from "../../components/Video";
+import Navbar from "../../components/Navbar";
 import { useGetVideo } from "@/hooks/api/videos/useGetVideo";
 
 export default function SingleVideo() {
