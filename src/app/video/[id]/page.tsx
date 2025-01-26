@@ -4,11 +4,13 @@ import { useParams } from "next/navigation";
 import Video from "../../components/Video";
 import Navbar from "../../components/Navbar";
 import { useGetVideo } from "@/hooks/api/videos/useGetVideo";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function SingleVideo() {
    const params = useParams();
    const videoId = params.id as string;
    const { data: video, isLoading } = useGetVideo(videoId);
+   const { isAuthenticated, user } = useAuth();
 
    if (isLoading) {
       return (

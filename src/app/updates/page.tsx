@@ -138,7 +138,10 @@ export default function Updates() {
                                  disabled={isDeletePending}
                               >
                                  {isDeletePending ? (
-                                    <Loader2 className="animate-spin" size={32} />
+                                    <Loader2
+                                       className="animate-spin stroke-white"
+                                       size={32}
+                                    />
                                  ) : (
                                     <Trash2 size={32} />
                                  )}

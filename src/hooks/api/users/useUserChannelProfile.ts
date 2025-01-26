@@ -3,14 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 interface UserChannelProfile {
+   _id: string;
    fullname: string;
    username: string;
    subscribersCount: number;
-   channelsSubscribedToCount: number;
    isSubscribed: boolean;
    avatar: string;
    coverImage?: string;
-   email: string;
 }
 
 interface UserChannelProfileResponse {
@@ -23,7 +22,7 @@ const fetchUserChannelProfile = async (
    username: string
 ): Promise<UserChannelProfileResponse> => {
    try {
-      const { data } = await apiClient.get(`/api/users/channel/${username}`);
+      const { data } = await apiClient.get(`/api/v1/users/channel/${username}`);
       return data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
