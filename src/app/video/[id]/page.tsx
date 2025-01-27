@@ -5,12 +5,23 @@ import Video from "../../components/Video";
 import Navbar from "../../components/Navbar";
 import { useGetVideo } from "@/hooks/api/videos/useGetVideo";
 import { useAuth } from "@/hooks/useAuth";
+import { useEffect } from "react";
+import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
 
 export default function SingleVideo() {
    const params = useParams();
    const videoId = params.id as string;
    const { data: video, isLoading } = useGetVideo(videoId);
-   const { isAuthenticated, user } = useAuth();
+   const { isAuthenticated } = useAuth();
+   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
+
+   useEffect(() => {
+      if (isAuthenticated && video) {
+         updateWatchHistory({
+            videoId,
+         });
+      }
+   }, [videoId, isAuthenticated, video, updateWatchHistory]);
 
    if (isLoading) {
       return (

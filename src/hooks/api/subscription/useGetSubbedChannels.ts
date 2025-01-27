@@ -1,29 +1,39 @@
 import apiClient from "@/lib/api-client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import axios from "axios";
 
 interface SubscribedChannel {
    _id: string;
-   subscriber: string;
-   channel: string;
+   username: string;
+   avatar: string;
 }
 
-interface GetSubscribedChannelsResponse {
+interface GetSubscribedChannelResponse {
    statusCode: number;
    data: SubscribedChannel[];
    message: string;
 }
 
-const fetchSubscribedChannels = async (
-   userId: string
-): Promise<GetSubscribedChannelsResponse> => {
-   const { data } = await apiClient.get(`/api/subscriptions/user/${userId}`);
-   return data;
+const fetchSubscribedChannels = async (): Promise<GetSubscribedChannelResponse> => {
+   try {
+      const { data } = await apiClient.get(`/api/v1/subscriptions/channels/subscribed`);
+      return data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(
+            error.response.data.message || "An error occurred during watch history fetch"
+         );
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
-export const useGetSubscribedChannels = (userId: string) => {
-   return useQuery<GetSubscribedChannelsResponse, Error>({
-      queryKey: ["getSubscribedChannels", userId],
-      queryFn: () => fetchSubscribedChannels(userId),
-      enabled: !!userId, // Ensure the query only runs if userId is provided
+export const useGetSubscribedChannels = (): UseQueryResult<
+   GetSubscribedChannelResponse,
+   Error
+> => {
+   return useQuery<GetSubscribedChannelResponse, Error>({
+      queryKey: ["subscribedChannels"],
+      queryFn: fetchSubscribedChannels,
    });
 };

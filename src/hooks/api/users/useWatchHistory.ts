@@ -13,6 +13,7 @@ interface WatchHistoryItem {
    description: string;
    thumbnail: string;
    owner: VideoOwner;
+   createdAt: string;
 }
 
 interface WatchHistoryResponse {

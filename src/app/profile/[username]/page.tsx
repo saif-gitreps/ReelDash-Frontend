@@ -4,15 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-   UserPlus,
-   UserMinus,
-   Upload,
-   ChevronLeft,
-   ChevronRight,
-   Loader2,
-   Trash2,
-} from "lucide-react";
+import { UserPlus, UserMinus, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -26,8 +18,9 @@ import { useUserChannelProfile } from "@/hooks/api/users/useUserChannelProfile";
 import { useSubOrUnsubChannel } from "@/hooks/api/subscription/useToggleSub";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
+import { useIsSubscribed } from "@/hooks/api/subscription/useIsSubscribed";
 
-const VIDEOS_PER_PAGE = 3;
+const VIDEOS_PER_PAGE = 4;
 
 export default function UserProfile() {
    const params = useParams();
@@ -39,8 +32,10 @@ export default function UserProfile() {
    );
    const [historyPage, setHistoryPage] = useState(1);
    const [currentPage, setCurrentPage] = useState(1);
-   const isSubscribed = userChannelProfileData?.data.isSubscribed as boolean;
-   console.log(userChannelProfileData);
+   const { data: isSubscribedData } = useIsSubscribed(
+      userChannelProfileData?.data._id as string
+   );
+   const isSubscribed = isSubscribedData?.data;
 
    const { data: channelVideosData, isLoading: isChannelVideosLoading } = useGetAllVideos(
       {
@@ -80,6 +75,7 @@ export default function UserProfile() {
          updateAvatar(file, {
             onSuccess: () => {
                toast.success("Avatar updated successfully");
+
                queryClient.invalidateQueries({
                   queryKey: ["userChannelProfile", username as string],
                });
@@ -97,6 +93,7 @@ export default function UserProfile() {
          updateCoverImage(file, {
             onSuccess: () => {
                toast.success("Cover image updated successfully");
+
                queryClient.invalidateQueries({
                   queryKey: ["userChannelProfile", username as string],
                });
@@ -117,8 +114,13 @@ export default function UserProfile() {
             toast.success(
                isSubscribed ? "Unsubscribed successfully" : "Subscribed successfully"
             );
+
             queryClient.invalidateQueries({
                queryKey: ["userChannelProfile", username as string],
+            });
+
+            queryClient.invalidateQueries({
+               queryKey: ["isSubscribed", userChannelProfileData?.data._id as string],
             });
          },
          onError: () => {
@@ -161,7 +163,7 @@ export default function UserProfile() {
                   <Button
                      variant="outline"
                      size="icon"
-                     className="absolute bottom-0 right-0 opacity-45 bg-background/50 hover:bg-background/75"
+                     className="absolute bottom-0 right-0 opacity-75 bg-background/50 hover:bg-background/75"
                      onClick={() => document.getElementById("coverImageUpload")?.click()}
                      disabled={isCoverImageUpdating}
                   >
@@ -180,8 +182,7 @@ export default function UserProfile() {
                         "/placeholder.svg?height=200"
                      }
                      alt={`${username}'s profile picture`}
-                     width={128}
-                     height={128}
+                     fill
                   />
                )}
 
@@ -198,7 +199,7 @@ export default function UserProfile() {
                      <Button
                         variant="outline"
                         size="icon"
-                        className="absolute bottom-0 right-2 opacity-45 bg-background/50 hover:bg-background/75 rounded-full"
+                        className="absolute bottom-2 right-4 opacity-75 bg-background/50 hover:bg-background/75 rounded-full"
                         onClick={() => document.getElementById("avatarUpload")?.click()}
                         disabled={isAvatarUpdating}
                      >
@@ -236,11 +237,7 @@ export default function UserProfile() {
                   <Button
                      onClick={handleSubscribe}
                      disabled={isToggleSubscriptionPending}
-                     variant={
-                        userChannelProfileData?.data.isSubscribed
-                           ? "destructive"
-                           : "outline"
-                     }
+                     variant={isSubscribed ? "destructive" : "outline"}
                   >
                      {isSubscribed ? (
                         <>
@@ -287,7 +284,7 @@ export default function UserProfile() {
                            </div>
                         )}
 
-                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
                            {channelVideos.map((video) => (
                               <FeedVideoCard video={video} key={video._id} onProfile />
                            ))}
@@ -337,7 +334,7 @@ export default function UserProfile() {
                               </div>
                            )}
 
-                           <div className="">
+                           <div className="space-y-1">
                               {paginatedHistory.map((video) => (
                                  <div
                                     key={video._id}
@@ -353,12 +350,13 @@ export default function UserProfile() {
                                              className="w-20 h-20 rounded-md"
                                           />
                                        </Link>
-                                       <div>
-                                          <div className="font-semibold text-center mb-2 hover:opacity-70">
-                                             <Link href={`/video/${video._id}`}>
-                                                {video.title}
-                                             </Link>
-                                          </div>
+                                       <div className="space-y-1">
+                                          <Link
+                                             href={`/video/${video._id}`}
+                                             className="font-semibold text-center mb-2 hover:opacity-70"
+                                          >
+                                             {video.title}
+                                          </Link>
                                           <div className="text-sm text-muted-foreground flex items-center gap-1">
                                              <Image
                                                 src={video?.owner.avatar}
@@ -374,9 +372,12 @@ export default function UserProfile() {
                                                 @{video?.owner?.username}
                                              </Link>
                                           </div>
+                                          <div className="text-sm text-muted-foreground">
+                                             {new Date(video.createdAt).toDateString()}
+                                          </div>
                                        </div>
                                     </div>
-                                    <Button
+                                    {/* <Button
                                        variant="ghost"
                                        onClick={() => {}}
                                        className="text-destructive hover:text-destructive"
@@ -390,7 +391,7 @@ export default function UserProfile() {
                                        ) : (
                                           <Trash2 size={32} />
                                        )}
-                                    </Button>
+                                    </Button> */}
                                  </div>
                               ))}
                            </div>

@@ -1,12 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchReelVideo, Video } from "./api/videos/useGetReelVideo";
-import { useUpdateWatchHistory } from "./api/users/useUpdateWatchHistory";
-import { useAuth } from "./useAuth";
 
 export const useVideoPlayer = () => {
    const queryClient = useQueryClient();
-   const { isAuthenticated } = useAuth();
    const [previousVideos, setPreviousVideos] = useState<{ data: Video }[]>([]);
    const preloadVideoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -28,8 +25,6 @@ export const useVideoPlayer = () => {
       staleTime: Infinity,
       enabled: false,
    });
-
-   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
 
    const preloadVideo = async (videoUrl: string) => {
       if (!preloadVideoRef.current) {
@@ -56,12 +51,6 @@ export const useVideoPlayer = () => {
 
          queryClient.setQueryData(["currentVideo"], preloadedVideo);
          queryClient.setQueryData(["preloadedVideo"], null);
-
-         if (isAuthenticated) {
-            updateWatchHistory({
-               videoId: preloadedVideo?.data?._id,
-            });
-         }
 
          fetchPreloadedVideo();
       } else {

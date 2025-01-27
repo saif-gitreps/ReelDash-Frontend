@@ -6,14 +6,16 @@ import { Button } from "@/components/ui/button";
 import { BarChart2, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useVideoPlayer } from "@/hooks/useVideoPlayer";
 import { useAuth } from "@/hooks/useAuth";
 import Loading from "../components/Loading";
+import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
 
 export default function Home() {
    const { isAuthenticated } = useAuth();
    const [isTransitioning, setIsTransitioning] = useState(false);
+   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
 
    const {
       currentVideo,
@@ -44,6 +46,14 @@ export default function Home() {
       onSwipedDown: handlePreviousVideo,
       trackMouse: false,
    });
+
+   useEffect(() => {
+      if (isAuthenticated && currentVideo && currentVideo.data) {
+         updateWatchHistory({
+            videoId: currentVideo.data._id,
+         });
+      }
+   }, [isAuthenticated, updateWatchHistory, currentVideo]);
 
    if (!isAuthenticated) {
       return (
