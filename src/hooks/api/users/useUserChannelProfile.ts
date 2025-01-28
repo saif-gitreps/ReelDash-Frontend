@@ -28,7 +28,7 @@ const fetchUserChannelProfile = async (
       if (axios.isAxiosError(error) && error.response) {
          throw new Error(
             error.response.data.message ||
-               "An error occurred during user channel profile fetch"
+               "An error occurred while fetching user channel profile"
          );
       }
       throw new Error("Network error occurred");

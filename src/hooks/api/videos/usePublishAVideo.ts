@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api-client";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 interface PublishVideoBody {
    title: string;
@@ -29,11 +30,19 @@ const publishVideo = async (data: PublishVideoBody): Promise<PublishVideoRespons
    formData.append("thumbnail", data.thumbnail);
    formData.append("video", data.video);
 
-   const response = await apiClient.post("/api/v1/videos", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-   });
-
-   return response.data;
+   try {
+      const response = await apiClient.post("/api/v1/videos", formData, {
+         headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(
+            error.response.data.message || "An error occurred while publishing the video"
+         );
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
 export const usePublishAVideo = () => {

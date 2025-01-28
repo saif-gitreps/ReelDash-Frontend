@@ -21,7 +21,7 @@ const subOrUnsubChannel = async (
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
          throw new Error(
-            error.response.data.message || "An error occurred during watch history fetch"
+            error.response.data.message || "An error occurred while toggling subscription"
          );
       }
       throw new Error("Network error occurred");

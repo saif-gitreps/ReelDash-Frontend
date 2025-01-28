@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api-client";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import axios from "axios";
 
 interface GetLikesOnVideoResponse {
    statusCode: number;
@@ -8,8 +9,18 @@ interface GetLikesOnVideoResponse {
 }
 
 const fetchLikesOnVideo = async (videoId: string): Promise<GetLikesOnVideoResponse> => {
-   const { data } = await apiClient.get(`/api/v1/likes/video/${videoId}`);
-   return data;
+   try {
+      const { data } = await apiClient.get(`/api/v1/likes/video/${videoId}`);
+      return data;
+   } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+         throw new Error(
+            error.response.data.message ||
+               "An error occurred while fetching likes on video"
+         );
+      }
+      throw new Error("Network error occurred");
+   }
 };
 
 export const useGetLikesOnAVideo = (
@@ -18,6 +29,6 @@ export const useGetLikesOnAVideo = (
    return useQuery<GetLikesOnVideoResponse, Error>({
       queryKey: ["likesOnVideo", videoId],
       queryFn: () => fetchLikesOnVideo(videoId),
-      enabled: !!videoId, // Ensures the query only runs when `videoId` is provided
+      enabled: !!videoId,
    });
 };

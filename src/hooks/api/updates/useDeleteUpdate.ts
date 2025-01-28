@@ -5,7 +5,7 @@ import axios from "axios";
 interface Post {
    _id: string;
    content: string;
-   owner: string; // User ID of the post owner
+   owner: string;
    createdAt: string;
    updatedAt: string;
 }
@@ -22,7 +22,9 @@ const deletePost = async (postId: string): Promise<DeletePostResponse> => {
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occurred while deleting update"
+         );
       }
       throw new Error("Network error occurred");
    }

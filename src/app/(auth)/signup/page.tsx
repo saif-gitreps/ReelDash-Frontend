@@ -53,9 +53,9 @@ export default function SignUp() {
 
    return (
       <AuthLayer isProtected={false}>
-         <div className="flex min-h-screen items-center justify-center">
+         <div className="flex min-h-screen items-center justify-center py-2">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
-               <h1 className="text-2xl font-bold mb-6">Sign Up</h1>
+               <h1 className="text-2xl font-bold mb-3">Sign Up</h1>
                <div>
                   Have an account?{" "}
                   <Link href="/login" className="text-blue-500">
@@ -110,8 +110,8 @@ export default function SignUp() {
                   {isPending ? "Signing up..." : "Sign Up"}
                </Button>
 
-               <Link href="/home" className="mt-10 block text-center">
-                  Scroll reels
+               <Link href="/feed" className="mt-10 block text-center">
+                  Watch videos
                </Link>
             </form>
          </div>

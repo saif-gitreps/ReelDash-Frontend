@@ -40,7 +40,7 @@ export default function Login() {
       <AuthLayer isProtected={false}>
          <div className="flex min-h-screen items-center justify-center">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
-               <h1 className="text-2xl font-bold mb-6">Login</h1>
+               <h1 className="text-2xl font-bold mb-3">Login</h1>
                <div>
                   Do not have an account?{" "}
                   <Link href="/signup" className="text-blue-500">
@@ -67,8 +67,8 @@ export default function Login() {
                   {isPending ? "Logging in..." : "Login"}
                </Button>
 
-               <Link href="/home" className="mt-10 block text-center">
-                  Scroll reels
+               <Link href="/feed" className="mt-10 block text-center">
+                  Watch videos
                </Link>
             </form>
          </div>

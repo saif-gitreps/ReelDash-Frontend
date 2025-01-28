@@ -20,7 +20,9 @@ const updateWatchHistory = async (
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occurred updating watch history"
+         );
       }
       throw new Error("Network error occurred");
    }

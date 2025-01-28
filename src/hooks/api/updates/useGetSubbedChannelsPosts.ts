@@ -38,7 +38,9 @@ const fetchSubbedChannelsPosts = async (
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occured while fetching posts"
+         );
       }
       throw new Error("Network error occurred");
    }

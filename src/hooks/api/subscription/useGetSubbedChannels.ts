@@ -5,7 +5,9 @@ import axios from "axios";
 interface SubscribedChannel {
    _id: string;
    username: string;
+   fullname: string;
    avatar: string;
+   createdAt: string;
 }
 
 interface GetSubscribedChannelResponse {
@@ -21,7 +23,8 @@ const fetchSubscribedChannels = async (): Promise<GetSubscribedChannelResponse> 
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
          throw new Error(
-            error.response.data.message || "An error occurred during watch history fetch"
+            error.response.data.message ||
+               "An error occurred while fetching subscribed channels"
          );
       }
       throw new Error("Network error occurred");

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useGetAllVideos } from "@/hooks/api/videos/useGetAllVideos";
 import FeedVideoCard from "../components/FeedVideoCard";
+import Loading from "../components/Loading";
 
 const VIDEOS_PER_PAGE = 6;
 
@@ -31,46 +32,44 @@ export default function Feed() {
    const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
+   if (isPending && videos === undefined) {
+      return <Loading />;
+   }
+
    return (
       <div className="container mx-auto p-4 bg-background text-foreground">
-         {isPending && videos === undefined ? (
-            <div className="text-center">Loading videos...</div>
-         ) : (
-            <>
-               {videos.length === 0 && (
-                  <div className="text-center text-muted-foreground">No videos found</div>
-               )}
+         {videos.length === 0 && (
+            <div className="text-center text-muted-foreground">No videos found</div>
+         )}
 
-               <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                  {videos.map((video) => (
-                     <FeedVideoCard video={video} key={video._id} />
-                  ))}
-               </div>
+         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+            {videos.map((video) => (
+               <FeedVideoCard video={video} key={video._id} />
+            ))}
+         </div>
 
-               {totalPages > 1 && (
-                  <div className="flex justify-between items-center mt-4">
-                     <Button
-                        onClick={prevPage}
-                        disabled={currentPage === 1 || isPending}
-                        className="yellow-accent-bg"
-                     >
-                        <ChevronLeft className="w-4 h-4 mr-2" />
-                        Previous
-                     </Button>
-                     <span>
-                        Page {currentPage} of {totalPages}
-                     </span>
-                     <Button
-                        onClick={nextPage}
-                        disabled={currentPage === totalPages || isPending}
-                        className="yellow-accent-bg"
-                     >
-                        Next
-                        <ChevronRight className="w-4 h-4 ml-2" />
-                     </Button>
-                  </div>
-               )}
-            </>
+         {totalPages > 1 && (
+            <div className="flex justify-between items-center mt-4">
+               <Button
+                  onClick={prevPage}
+                  disabled={currentPage === 1 || isPending}
+                  className="yellow-accent-bg"
+               >
+                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  Previous
+               </Button>
+               <span>
+                  Page {currentPage} of {totalPages}
+               </span>
+               <Button
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages || isPending}
+                  className="yellow-accent-bg"
+               >
+                  Next
+                  <ChevronRight className="w-4 h-4 ml-2" />
+               </Button>
+            </div>
          )}
       </div>
    );

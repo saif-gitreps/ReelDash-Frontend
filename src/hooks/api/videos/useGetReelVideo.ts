@@ -30,7 +30,9 @@ export const fetchReelVideo = async (): Promise<GetReelVideoResponse> => {
       return data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occurred while fetching reel video"
+         );
       }
       throw new Error("Network error occurred");
    }

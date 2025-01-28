@@ -9,7 +9,7 @@ interface AddPostBody {
 interface Post {
    _id: string;
    content: string;
-   owner: string; // User ID of the post owner
+   owner: string;
    createdAt: string;
    updatedAt: string;
 }
@@ -26,7 +26,9 @@ const addPost = async (data: AddPostBody): Promise<AddPostResponse> => {
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occurred while posting the update"
+         );
       }
       throw new Error("Network error occurred");
    }

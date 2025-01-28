@@ -40,7 +40,9 @@ const registerUser = async (data: RegisterUserBody): Promise<RegisterUserRespons
       return response.data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occurred during sign up"
+         );
       }
       throw new Error("Network error occurred");
    }

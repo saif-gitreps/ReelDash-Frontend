@@ -14,7 +14,9 @@ const fetchIsLiked = async (videoId: string): Promise<IsLikedResponse> => {
       return data;
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-         throw new Error(error.response.data.message || "An error occurred during login");
+         throw new Error(
+            error.response.data.message || "An error occurred while checking like status"
+         );
       }
       throw new Error("Network error occurred");
    }

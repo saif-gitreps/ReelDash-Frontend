@@ -39,7 +39,8 @@ const fetchWatchHistory = async (
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
          throw new Error(
-            error.response.data.message || "An error occurred during watch history fetch"
+            error.response.data.message ||
+               "An error occurred while fetching watch history"
          );
       }
       throw new Error("Network error occurred");

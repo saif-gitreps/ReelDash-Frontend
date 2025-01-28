@@ -12,6 +12,7 @@ import formatDate from "@/lib/format-date";
 import { useAuth } from "@/hooks/useAuth";
 import AuthLayer from "../components/AuthLayer";
 import { useQueryClient } from "@tanstack/react-query";
+import Loading from "../components/Loading";
 
 const UPDATES_PER_PAGE = 5;
 
@@ -21,7 +22,7 @@ export default function Updates() {
    const [currentPage, setCurrentPage] = useState(1);
    const { user } = useAuth();
 
-   const { data, isFetching } = useGetSubbedChannelsPosts({
+   const { data, isLoading } = useGetSubbedChannelsPosts({
       page: currentPage,
       limit: UPDATES_PER_PAGE,
    });
@@ -56,20 +57,8 @@ export default function Updates() {
       });
    };
 
-   if (isFetching || !isMounted) {
-      return (
-         <div className="container mx-auto p-4 bg-background text-foreground">
-            <div className="animate-pulse space-y-4">
-               <div className="h-8 bg-secondary rounded w-1/3"></div>
-               <div className="h-32 bg-secondary rounded"></div>
-               <div className="h-32 bg-secondary rounded"></div>
-               <div className="h-32 bg-secondary rounded"></div>
-               <div className="h-32 bg-secondary rounded"></div>
-               <div className="h-32 bg-secondary rounded"></div>
-               <div className="h-32 bg-secondary rounded"></div>
-            </div>
-         </div>
-      );
+   if (isLoading || !isMounted) {
+      return <Loading />;
    }
 
    return (
@@ -157,7 +146,7 @@ export default function Updates() {
                <div className="flex justify-between items-center mt-4">
                   <Button
                      onClick={prevPage}
-                     disabled={currentPage === 1 || isFetching}
+                     disabled={currentPage === 1 || isLoading}
                      className="yellow-accent-bg"
                   >
                      <ChevronLeft className="w-4 h-4 mr-2" />
@@ -168,7 +157,7 @@ export default function Updates() {
                   </span>
                   <Button
                      onClick={nextPage}
-                     disabled={currentPage === totalPages || isFetching}
+                     disabled={currentPage === totalPages || isLoading}
                      className="yellow-accent-bg"
                   >
                      Next

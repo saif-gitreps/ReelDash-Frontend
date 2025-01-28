@@ -66,6 +66,18 @@ export default function Navbar() {
             </Link>
          )}
 
+         {!isAuthenticated && (
+            <Link
+               href="/signup"
+               className={`flex items-center justify-center md:justify-start gap-2 p-2 md:px-3 w-full ${
+                  pathname === "/login" ? "yellow-accent" : "text-muted-foreground"
+               }`}
+            >
+               <User className="h-5 w-5 md:h-6 md:w-6" />
+               <span className="hidden md:inline">Sign up</span>
+            </Link>
+         )}
+
          {isAuthenticated && (
             <Link
                href="/updates"

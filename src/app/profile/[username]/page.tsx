@@ -142,7 +142,7 @@ export default function UserProfile() {
                <Image
                   src={
                      userChannelProfileData?.data.coverImage ||
-                     "https://res.cloudinary.com/dnhpmyqsm/image/upload/c_fill,g_auto,h_250,w_970/b_rgb:000000,e_gradient_fade,y_-0.50/c_scale,co_rgb:ffffff,fl_relative,l_text:montserrat_25_style_light_align_center:Shop%20Now,w_0.5,y_0.18/v1737893749/image_2_bdhok6.png"
+                     "https://res.cloudinary.com/dnhpmyqsm/image/upload/v1738056895/gmq2yeiaofahtr5wvv0m.png"
                   }
                   alt={`${username}'s cover photo`}
                   fill
@@ -179,7 +179,7 @@ export default function UserProfile() {
                   <Image
                      src={
                         userChannelProfileData?.data.avatar ||
-                        "/placeholder.svg?height=200"
+                        "https://res.cloudinary.com/dnhpmyqsm/image/upload/v1737893749/image_2_bdhok6.png"
                      }
                      alt={`${username}'s profile picture`}
                      fill

@@ -34,7 +34,7 @@ interface GetAllVideosParams {
    sortBy?: string;
    sortType?: number;
    userId?: string;
-   username?: string; // getting username from the params
+   username?: string;
 }
 
 const fetchAllVideos = async (

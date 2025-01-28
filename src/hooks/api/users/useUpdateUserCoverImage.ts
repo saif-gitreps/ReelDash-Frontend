@@ -30,7 +30,7 @@ const updateUserCoverImage = async (
    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
          throw new Error(
-            error.response.data.message || "An error occurred during cover image update"
+            error.response.data.message || "An error occurred during cover-image update"
          );
       }
       throw new Error("Network error occurred");
