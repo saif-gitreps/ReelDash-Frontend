@@ -1,6 +1,6 @@
 "use client";
 
-import AuthLayer from "@/app/components/AuthLayer";
+import AuthLayer from "@/components/AuthLayer";
 import Loading from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import { useGetSubscribedChannels } from "@/hooks/api/subscription/useGetSubbedChannels";

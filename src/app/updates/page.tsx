@@ -10,9 +10,9 @@ import { useDeletePost } from "@/hooks/api/updates/useDeleteUpdate";
 import Image from "next/image";
 import formatDate from "@/lib/format-date";
 import { useAuth } from "@/hooks/useAuth";
-import AuthLayer from "../components/AuthLayer";
+import AuthLayer from "../../components/AuthLayer";
 import { useQueryClient } from "@tanstack/react-query";
-import Loading from "../components/Loading";
+import Loading from "../../components/Loading";
 
 const UPDATES_PER_PAGE = 5;
 

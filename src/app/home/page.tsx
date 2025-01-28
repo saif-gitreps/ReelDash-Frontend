@@ -1,16 +1,15 @@
 "use client";
 
 import { useSwipeable } from "react-swipeable";
-import Video from "../components/Video";
 import { Button } from "@/components/ui/button";
 import { BarChart2, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-
 import { useEffect, useState } from "react";
 import { useVideoPlayer } from "@/hooks/useVideoPlayer";
 import { useAuth } from "@/hooks/useAuth";
-import Loading from "../components/Loading";
+import Loading from "../../components/Loading";
 import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
+import Video from "../../components/Video";
 
 export default function Home() {
    const { isAuthenticated } = useAuth();

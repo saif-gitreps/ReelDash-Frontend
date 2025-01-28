@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useAddPost } from "@/hooks/api/updates/useAddUpdate";
 import toast from "react-hot-toast";
-import AuthLayer from "@/app/components/AuthLayer";
+import AuthLayer from "@/components/AuthLayer";
 
 // Define validation schema using Zod
 const postSchema = z.object({

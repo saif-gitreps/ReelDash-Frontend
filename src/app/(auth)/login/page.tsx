@@ -10,7 +10,7 @@ import { toast } from "react-hot-toast"; // Assuming you use react-hot-toast for
 import { useLoginUser } from "@/hooks/api/users/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import AuthLayer from "@/app/components/AuthLayer";
+import AuthLayer from "@/components/AuthLayer";
 
 interface LoginFormInputs {
    email: string;

@@ -11,7 +11,7 @@ import {
    Legend,
    ResponsiveContainer,
 } from "recharts";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../../../components/Navbar";
 
 const dummyStats = [
    { date: "2023-05-01", views: 1000, likes: 200, comments: 50 },
