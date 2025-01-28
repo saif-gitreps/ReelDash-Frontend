@@ -2,8 +2,8 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
-import Navbar from "./Navbar";
 import CurrentUserWrapper from "./CurrentUserWrapper";
+import Navbar from "./Navbar";
 
 export default function ProviderWrapper({
    children,

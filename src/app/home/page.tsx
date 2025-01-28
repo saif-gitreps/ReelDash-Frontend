@@ -9,7 +9,7 @@ import { useVideoPlayer } from "@/hooks/useVideoPlayer";
 import { useAuth } from "@/hooks/useAuth";
 import Loading from "../../components/Loading";
 import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
-import Video from "../../components/Video";
+import Video from "@/components/Video";
 
 export default function Home() {
    const { isAuthenticated } = useAuth();

@@ -7,12 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
 import { usePublishAVideo } from "@/hooks/api/videos/usePublishAVideo";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import AuthLayer from "../../components/AuthLayer";
-import Navbar from "../../components/Navbar";
+import AuthLayer from "@/components/AuthLayer";
+import Navbar from "@/components/Navbar";
 
 const videoUploadSchema = z.object({
    title: z.string().min(1, "Title is required").max(100, "Title is too long"),
