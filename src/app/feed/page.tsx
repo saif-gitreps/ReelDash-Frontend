@@ -12,7 +12,7 @@ const VIDEOS_PER_PAGE = 6;
 export default function Feed() {
    const [currentPage, setCurrentPage] = useState(1);
 
-   const { data, isPending, error } = useGetAllVideos({
+   const { data, isLoading, error } = useGetAllVideos({
       page: currentPage,
       limit: VIDEOS_PER_PAGE,
    });
@@ -32,7 +32,7 @@ export default function Feed() {
    const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
-   if (isPending && videos === undefined) {
+   if (isLoading && data === undefined) {
       return <Loading />;
    }
 
@@ -52,7 +52,7 @@ export default function Feed() {
             <div className="flex justify-between items-center mt-4">
                <Button
                   onClick={prevPage}
-                  disabled={currentPage === 1 || isPending}
+                  disabled={currentPage === 1 || isLoading}
                   className="yellow-accent-bg"
                >
                   <ChevronLeft className="w-4 h-4 mr-2" />
@@ -63,7 +63,7 @@ export default function Feed() {
                </span>
                <Button
                   onClick={nextPage}
-                  disabled={currentPage === totalPages || isPending}
+                  disabled={currentPage === totalPages || isLoading}
                   className="yellow-accent-bg"
                >
                   Next

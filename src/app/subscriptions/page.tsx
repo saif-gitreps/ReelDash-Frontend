@@ -39,7 +39,7 @@ export default function Feed() {
    const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
-   if (isLoading && isSubscribedChannelsLoading && videos === undefined) {
+   if (isLoading && isSubscribedChannelsLoading && data === undefined) {
       return <Loading />;
    }
 

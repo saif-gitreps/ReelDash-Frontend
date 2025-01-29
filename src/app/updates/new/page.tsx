@@ -11,7 +11,6 @@ import { useAddPost } from "@/hooks/api/updates/useAddUpdate";
 import toast from "react-hot-toast";
 import AuthLayer from "@/components/AuthLayer";
 
-// Define validation schema using Zod
 const postSchema = z.object({
    content: z
       .string()
@@ -34,7 +33,6 @@ export default function NewPost() {
       mode: "onSubmit",
    });
 
-   // Form submission handler
    const onSubmit: SubmitHandler<PostFormValues> = (data) => {
       addPost(data, {
          onSuccess: (response) => {
