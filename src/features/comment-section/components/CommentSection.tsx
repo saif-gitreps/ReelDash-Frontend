@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useCreateCommentOnVideo } from "@/hooks/api/comments/useCreateComment";
-import { useDeleteComment } from "@/hooks/api/comments/useDeleteComment";
-import { Comment } from "@/hooks/api/comments/useGetComments";
+import { useCreateCommentOnVideo } from "@/features/comment-section/hooks/useCreateComment";
+import { useDeleteComment } from "@/features/comment-section/hooks/useDeleteComment";
+import { Comment } from "@/features/comment-section/hooks/useGetComments";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash2, X } from "lucide-react";

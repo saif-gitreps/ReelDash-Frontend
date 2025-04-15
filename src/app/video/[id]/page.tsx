@@ -1,12 +1,12 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useGetVideo } from "@/hooks/api/videos/useGetVideo";
+import { useGetVideo } from "@/features/videos/hooks/useGetVideo";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
 import Navbar from "@/components/Navbar";
-import Video from "@/components/Video";
+import Video from "@/features/videos/components/Video";
 
 export default function SingleVideo() {
    const params = useParams();

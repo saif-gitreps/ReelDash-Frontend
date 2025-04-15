@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useGetAllVideos } from "@/hooks/api/videos/useGetAllVideos";
-import FeedVideoCard from "../../components/FeedVideoCard";
+import { useGetAllVideos } from "@/features/videos/hooks/useGetAllVideos";
+import FeedVideoCard from "../../features/videos/components/FeedVideoCard";
 import Loading from "../../components/Loading";
 
 const VIDEOS_PER_PAGE = 6;

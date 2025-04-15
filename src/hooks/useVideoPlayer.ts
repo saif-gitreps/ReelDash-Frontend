@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchReelVideo, Video } from "./api/videos/useGetReelVideo";
+import { fetchReelVideo, Video } from "../features/videos/hooks/useGetReelVideo";
 
 export const useVideoPlayer = () => {
    const queryClient = useQueryClient();
