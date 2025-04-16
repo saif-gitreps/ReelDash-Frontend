@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useAddPost } from "@/hooks/api/updates/useAddUpdate";
+import { useAddPost } from "@/features/updates/api/useAddUpdate";
 import toast from "react-hot-toast";
 import AuthLayer from "@/components/AuthLayer";
 

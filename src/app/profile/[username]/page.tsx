@@ -8,17 +8,17 @@ import { UserPlus, UserMinus, Upload, ChevronLeft, ChevronRight } from "lucide-r
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { useUpdateUserAvatar } from "@/hooks/api/users/useUpdateUserAvatar";
-import { useUpdateUserCoverImage } from "@/hooks/api/users/useUpdateUserCoverImage";
-import { useGetAllVideos } from "@/features/videos/hooks/useGetAllVideos";
+import { useUpdateUserAvatar } from "@/features/user/api/useUpdateUserAvatar";
+import { useUpdateUserCoverImage } from "@/features/user/api/useUpdateUserCoverImage";
+import { useGetAllVideos } from "@/features/videos/api/useGetAllVideos";
 import FeedVideoCard from "@/features/videos/components/FeedVideoCard";
 import Loading from "@/components/Loading";
-import { useWatchHistory } from "@/hooks/api/users/useWatchHistory";
-import { useUserChannelProfile } from "@/hooks/api/users/useUserChannelProfile";
-import { useSubOrUnsubChannel } from "@/hooks/api/subscription/useToggleSub";
+import { useWatchHistory } from "@/features/user/api/useWatchHistory";
+import { useUserChannelProfile } from "@/features/user/api/useUserChannelProfile";
+import { useSubOrUnsubChannel } from "@/features/subscription/api/useToggleSub";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
-import { useIsSubscribed } from "@/hooks/api/subscription/useIsSubscribed";
+import { useIsSubscribed } from "@/features/subscription/api/useIsSubscribed";
 
 const VIDEOS_PER_PAGE = 4;
 

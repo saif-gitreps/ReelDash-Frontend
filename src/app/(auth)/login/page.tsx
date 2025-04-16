@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
 import { toast } from "react-hot-toast"; // Assuming you use react-hot-toast for notifications
-import { useLoginUser } from "@/hooks/api/users/useLogin";
+import { useLoginUser } from "@/features/user/api/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import AuthLayer from "@/components/AuthLayer";

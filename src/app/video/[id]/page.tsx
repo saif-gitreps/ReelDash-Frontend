@@ -1,10 +1,10 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useGetVideo } from "@/features/videos/hooks/useGetVideo";
+import { useGetVideo } from "@/features/videos/api/useGetVideo";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
-import { useUpdateWatchHistory } from "@/hooks/api/users/useUpdateWatchHistory";
+import { useUpdateWatchHistory } from "@/features/user/api/useUpdateWatchHistory";
 import Navbar from "@/components/Navbar";
 import Video from "@/features/videos/components/Video";
 

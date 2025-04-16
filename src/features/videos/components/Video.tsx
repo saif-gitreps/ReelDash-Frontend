@@ -3,19 +3,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
-import { Video as VideoType } from "@/features/videos/hooks/useGetReelVideo";
+import { Video as VideoType } from "@/features/videos/api/useGetReelVideo";
 import Image from "next/image";
-import { useLikeUnlikeVideo } from "@/features/videos/hooks/useToggleLike";
+import { useLikeUnlikeVideo } from "@/features/videos/api/useToggleLike";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { useIsLiked } from "@/features/videos/hooks/useIsLikedVideo";
+import { useIsLiked } from "@/features/videos/api/useIsLikedVideo";
 import { useAuth } from "@/hooks/useAuth";
 import EnhancedVideo from "./EnhancedVideo";
-import { useGetLikesOnAVideo } from "@/features/videos/hooks/useGetLikesOnVideo";
+import { useGetLikesOnAVideo } from "@/features/videos/api/useGetLikesOnVideo";
 import Loading from "../../../components/Loading";
 import { CommentsSection } from "../../comment-section/components/CommentSection";
-import { useGetCommentsOnVideo } from "@/features/comment-section/hooks/useGetComments";
+import { useGetCommentsOnVideo } from "@/features/comment-section/api/useGetComments";
 
 interface VideoProps {
    video: VideoType;

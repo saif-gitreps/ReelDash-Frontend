@@ -3,8 +3,8 @@
 import AuthLayer from "@/components/AuthLayer";
 import Loading from "@/app/loading";
 import { Button } from "@/components/ui/button";
-import { useGetSubscribedChannels } from "@/hooks/api/subscription/useGetSubbedChannels";
-import { useSubOrUnsubChannel } from "@/hooks/api/subscription/useToggleSub";
+import { useGetSubscribedChannels } from "@/features/subscription/api/useGetSubbedChannels";
+import { useSubOrUnsubChannel } from "@/features/subscription/api/useToggleSub";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { UserMinus } from "lucide-react";

@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
 import { toast } from "react-hot-toast";
-import { useRegisterUser } from "@/hooks/api/users/useRegister";
-import { useLoginUser } from "@/hooks/api/users/useLogin";
+import { useRegisterUser } from "@/features/user/api/useRegister";
+import { useLoginUser } from "@/features/user/api/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import AuthLayer from "@/components/AuthLayer";

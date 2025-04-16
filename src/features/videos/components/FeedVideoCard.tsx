@@ -1,4 +1,4 @@
-import { Video } from "@/features/videos/hooks/useGetReelVideo";
+import { Video } from "@/features/videos/api/useGetReelVideo";
 import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import Link from "next/link";

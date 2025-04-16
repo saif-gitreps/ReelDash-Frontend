@@ -1,4 +1,4 @@
-import { refreshAccessToken } from "@/hooks/api/users/useRefreshAccessToken";
+import { refreshAccessToken } from "@/features/user/api/useRefreshAccessToken";
 import apiClient from "./api-client";
 
 apiClient.interceptors.response.use(

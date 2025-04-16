@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { useGetSubscribedChannelsVideos } from "@/features/videos/hooks/useGetSubscribedChannelVideos";
+import { useGetSubscribedChannelsVideos } from "@/features/videos/api/useGetSubscribedChannelVideos";
 import AuthLayer from "../../components/AuthLayer";
 import FeedVideoCard from "../../features/videos/components/FeedVideoCard";
 import Loading from "../../components/Loading";
-import { useGetSubscribedChannels } from "@/hooks/api/subscription/useGetSubbedChannels";
+import { useGetSubscribedChannels } from "@/features/subscription/api/useGetSubbedChannels";
 import Link from "next/link";
 import Image from "next/image";
 

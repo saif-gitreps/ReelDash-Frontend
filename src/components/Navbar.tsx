@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, User, Film, Bell, LogOut, Subtitles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { useLogoutUser } from "@/hooks/api/users/useLogout";
+import { useLogoutUser } from "@/features/user/api/useLogout";
 
 export default function Navbar() {
    const pathname = usePathname();

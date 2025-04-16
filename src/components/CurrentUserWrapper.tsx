@@ -1,6 +1,6 @@
 "use client";
 
-import { useCurrentUser } from "@/hooks/api/users/useCurrentUser";
+import { useCurrentUser } from "@/features/user/api/useCurrentUser";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 
