@@ -1,4 +1,4 @@
-import { Video } from "@/features/videos/api/useGetReelVideo";
+import { Video } from "../api/useGetReelVideo";
 import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,12 +18,12 @@ export default function FeedVideoCard({ video, onProfile }: FeedVideoCardProps) 
          key={video._id}
          className="bg-secondary rounded-lg shadow-md overflow-hidden"
       >
-         <div className="relative h-48">
+         <div className="relative" style={{ height: "12rem" }}>
             <Image
                src={video.thumbnail}
                alt={video.title}
-               layout="fill"
-               objectFit="cover"
+               fill
+               className="object-cover"
             />
          </div>
 
@@ -34,6 +34,7 @@ export default function FeedVideoCard({ video, onProfile }: FeedVideoCardProps) 
                   <Image
                      src={video.owner.avatar}
                      width={30}
+                     loading="lazy"
                      height={20}
                      className="rounded-full w-8 h-8"
                      alt="Pfp"

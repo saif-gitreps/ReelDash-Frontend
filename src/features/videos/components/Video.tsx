@@ -15,7 +15,7 @@ import EnhancedVideo from "./EnhancedVideo";
 import { useGetLikesOnAVideo } from "@/features/videos/api/useGetLikesOnVideo";
 import Loading from "../../../components/Loading";
 import { CommentsSection } from "../../comment-section/components/CommentSection";
-import { useGetCommentsOnVideo } from "@/features/comment-section/api/useGetComments";
+import { useGetCommentsOnVideo } from "../../comment-section/api/useGetComments";
 
 interface VideoProps {
    video: VideoType;
@@ -45,7 +45,7 @@ export default function Video({ video }: VideoProps) {
    };
 
    return (
-      <div className="relative w-full h-screen bg-background">
+      <div className="relative w-full h-72 bg-background">
          <EnhancedVideo src={video.videoFile} />
 
          <div className="absolute bottom-0 left-0 p-4 text-white bg-gradient-to-t from-black/60 to-transparent w-full">
@@ -53,7 +53,7 @@ export default function Video({ video }: VideoProps) {
                <Image
                   src={video.owner.avatar}
                   alt={video.owner.username}
-                  className="w-8 h-8 rounded-full"
+                  className="w-10 h-10 rounded-full"
                   width={32}
                   height={32}
                />
@@ -67,7 +67,7 @@ export default function Video({ video }: VideoProps) {
             <p className="text-sm">{video.title}</p>
          </div>
 
-         <div className="absolute right-4 bottom-10 flex flex-col items-center space-y-1">
+         <div className="flex flex-col items-center space-y-1">
             <ActionButton
                Icon={Heart}
                isActive={isLiked?.data}

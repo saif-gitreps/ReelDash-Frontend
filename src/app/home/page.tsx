@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import { useVideoPlayer } from "@/hooks/useVideoPlayer";
 import { useAuth } from "@/hooks/useAuth";
 import Loading from "../../components/Loading";
-import { useUpdateWatchHistory } from "@/features/user/api/useUpdateWatchHistory";
-import Video from "@/features/videos/components/Video";
+import { useUpdateWatchHistory } from "../../features/user/api/useUpdateWatchHistory";
+import Video from "../../features/videos/components/Video";
 
 export default function Home() {
    const { isAuthenticated } = useAuth();

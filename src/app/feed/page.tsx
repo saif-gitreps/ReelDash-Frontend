@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useGetAllVideos } from "@/features/videos/api/useGetAllVideos";
+import { useGetAllVideos } from "../../features/videos/api/useGetAllVideos";
 import FeedVideoCard from "../../features/videos/components/FeedVideoCard";
 import Loading from "../../components/Loading";
 
@@ -26,6 +26,7 @@ export default function Feed() {
    }
 
    const videos = data?.data.videos || [];
+
    const totalVideos = data?.data.totalVideos || 0;
    const totalPages = Math.ceil(totalVideos / VIDEOS_PER_PAGE);
 

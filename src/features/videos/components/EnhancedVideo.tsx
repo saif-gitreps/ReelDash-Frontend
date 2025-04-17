@@ -83,7 +83,7 @@ export default function EnhancedVideo({
             onClick={handleVideoClick}
          />
 
-         <div className="absolute z-30 bottom-0 max-w-lg ml-20 lg:mx-auto left-10 right-0 bg-black opacity-35 flex items-center p-2">
+         <div className="absolute bottom-0 right-0 z-50 bg-black opacity-35 flex items-center p-2">
             <div className="flex items-center space-x-1">
                <Button
                   variant="ghost"
