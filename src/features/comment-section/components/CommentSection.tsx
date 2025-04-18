@@ -66,7 +66,7 @@ export function CommentsSection({ comments, videoId, onClose }: CommentsSectionP
    };
 
    return (
-      <div className="absolute bottom-0 z-40 left-0 right-0 bg-background/95 backdrop-blur-sm p-4 h-2/3 rounded-t-xl">
+      <div className="absolute bottom-0 z-50 bg-background left-0 right-0 p-4 h-2/3 rounded-t-xl">
          <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-foreground">Comments</h3>
             <Button
@@ -135,6 +135,7 @@ export function CommentsSection({ comments, videoId, onClose }: CommentsSectionP
             {isAuthenticated && (
                <Button
                   onClick={handleAddComment}
+                  className="disabled:opacity-100"
                   disabled={isAddCommentPending || !newComment.trim()}
                >
                   Post

@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { useUpdateWatchHistory } from "@/features/user/api/useUpdateWatchHistory";
 import Navbar from "@/components/Navbar";
-import Video from "@/features/videos/components/Video";
+import Video from "@/features/videos/components/VideoSection";
 
 export default function SingleVideo() {
    const params = useParams();

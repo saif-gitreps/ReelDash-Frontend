@@ -3,40 +3,36 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
-import { Video as VideoType } from "@/features/videos/api/useGetReelVideo";
-import Image from "next/image";
 import { useLikeUnlikeVideo } from "@/features/videos/api/useToggleLike";
-import Link from "next/link";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIsLiked } from "@/features/videos/api/useIsLikedVideo";
 import { useAuth } from "@/hooks/useAuth";
-import EnhancedVideo from "./EnhancedVideo";
 import { useGetLikesOnAVideo } from "@/features/videos/api/useGetLikesOnVideo";
 import Loading from "../../../components/Loading";
 import { CommentsSection } from "../../comment-section/components/CommentSection";
 import { useGetCommentsOnVideo } from "../../comment-section/api/useGetComments";
 
-interface VideoProps {
-   video: VideoType;
+interface VideoSectionProps {
+   videoId: string;
+   videoFile: string;
 }
 
-export default function Video({ video }: VideoProps) {
+export default function VideoSection({ videoId }: VideoSectionProps) {
    const [showComments, setShowComments] = useState(false);
    const queryClient = useQueryClient();
    const { isAuthenticated } = useAuth();
-   const { data: isLiked } = useIsLiked(video._id);
-   const { data: likesCount } = useGetLikesOnAVideo(video._id);
+   const { data: isLiked } = useIsLiked(videoId);
+   const { data: likesCount } = useGetLikesOnAVideo(videoId);
    const { mutate: toggleLike, isPending: isToggleLikePending } = useLikeUnlikeVideo();
-   const { data: comments, isLoading: isCommentsLoading } = useGetCommentsOnVideo(
-      video._id
-   );
+   const { data: comments, isLoading: isCommentsLoading } =
+      useGetCommentsOnVideo(videoId);
 
    const handleToggleLike = () => {
-      toggleLike(video._id, {
+      toggleLike(videoId, {
          onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["isLiked", video._id] });
-            queryClient.invalidateQueries({ queryKey: ["likesOnVideo", video._id] });
+            queryClient.invalidateQueries({ queryKey: ["isLiked", videoId] });
+            queryClient.invalidateQueries({ queryKey: ["likesOnVideo", videoId] });
          },
          onError: (error) => {
             toast.error(`Error toggling like: ${error.message}`);
@@ -45,29 +41,8 @@ export default function Video({ video }: VideoProps) {
    };
 
    return (
-      <div className="relative w-full h-72 bg-background">
-         <EnhancedVideo src={video.videoFile} />
-
-         <div className="absolute bottom-0 left-0 p-4 text-white bg-gradient-to-t from-black/60 to-transparent w-full">
-            <div className="flex items-center space-x-2 mb-2">
-               <Image
-                  src={video.owner.avatar}
-                  alt={video.owner.username}
-                  className="w-10 h-10 rounded-full"
-                  width={32}
-                  height={32}
-               />
-               <Link
-                  href={`/profile/${video.owner.username}`}
-                  className="text-lg font-bold hover:opacity-70"
-               >
-                  @{video.owner.username}
-               </Link>
-            </div>
-            <p className="text-sm">{video.title}</p>
-         </div>
-
-         <div className="flex flex-col items-center space-y-1">
+      <div className="space-x-1 w-full">
+         <div className="flex justify-between items-center">
             <ActionButton
                Icon={Heart}
                isActive={isLiked?.data}
@@ -99,7 +74,7 @@ export default function Video({ video }: VideoProps) {
                <CommentsSection
                   comments={comments?.data || []}
                   onClose={() => setShowComments(false)}
-                  videoId={video._id}
+                  videoId={videoId}
                />
             ))}
       </div>
@@ -116,17 +91,16 @@ interface ActionButtonProps {
 
 function ActionButton({ Icon, isActive, count, onClick, isDisabled }: ActionButtonProps) {
    return (
-      <div className="flex flex-col items-center">
-         <Button
-            variant="ghost"
-            size="icon"
+      <div className="flex items-center justify-center bg-white">
+         <button
             onClick={onClick}
             disabled={isDisabled}
-            className="text-white hover:text-white/80"
+            className="flex items-center justify-center bg-black"
          >
-            <Icon className={isActive ? "fill-red-500" : ""} size={32} />
-         </Button>
-         {count !== undefined && <span className="text-white text-base">{count}</span>}
+            <Icon className={`${isActive ? "fill-red-500" : "fill-red-500"}`} size={28} />
+         </button>
+
+         {count !== undefined && <span className="text-white text-xs">{count}</span>}
       </div>
    );
 }
