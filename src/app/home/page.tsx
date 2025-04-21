@@ -1,17 +1,14 @@
 "use client";
 
-import { useSwipeable } from "react-swipeable";
+// import { useSwipeable } from "react-swipeable";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useVideoPlayer } from "@/hooks/useVideoPlayer";
 import { useAuth } from "@/hooks/useAuth";
 import Loading from "../../components/Loading";
 import { useUpdateWatchHistory } from "../../features/user/api/useUpdateWatchHistory";
-import Image from "next/image";
-import VideoSection from "../../features/videos/components/VideoSection";
-import EnhancedVideo from "@/features/videos/components/EnhancedVideo";
+import VideoSection from "@/features/videos/components/VideoSection";
 
 export default function Home() {
    const { isAuthenticated } = useAuth();
@@ -42,11 +39,11 @@ export default function Home() {
       }
    };
 
-   const handlers = useSwipeable({
-      onSwipedUp: handleNextVideo,
-      onSwipedDown: handlePreviousVideo,
-      trackMouse: false,
-   });
+   // const handlers = useSwipeable({
+   //    onSwipedUp: handleNextVideo,
+   //    onSwipedDown: handlePreviousVideo,
+   //    trackMouse: false,
+   // });
 
    useEffect(() => {
       if (isAuthenticated && currentVideo && currentVideo.data) {
@@ -84,9 +81,7 @@ export default function Home() {
 
    return (
       <div className="w-full h-screen overflow-hidden bg-black flex justify-between flex-col relative">
-         <div className="h-5/6 w-full relative">
-            <EnhancedVideo src={currentVideo.data.videoFile} />
-         </div>
+         <VideoSection video={currentVideo.data} />
 
          <div className="absolute top-1/3 flex px-5 justify-between w-full">
             <div className="flex space-x-4 z-10">
@@ -112,45 +107,6 @@ export default function Home() {
                </Button>
             </div>
          </div>
-
-         <div className="flex justify-between px-5">
-            <div className=" text-white bg-gradient-to-t from-black/60 to-transparent w-full">
-               <div className="flex items-center space-x-2 mb-2">
-                  <Image
-                     src={currentVideo.data.owner.avatar}
-                     alt={currentVideo.data.owner.username}
-                     className="w-10 h-10 rounded-full"
-                     width={32}
-                     height={32}
-                  />
-                  <Link
-                     href={`/profile/${currentVideo.data.owner.username}`}
-                     className="text-lg font-bold hover:opacity-70"
-                  >
-                     @{currentVideo.data.owner.username}
-                  </Link>
-               </div>
-               <p className="text-sm">{currentVideo.data.title}</p>
-            </div>
-
-            <div {...handlers} className="flex justify-center items-center w-32">
-               <VideoSection
-                  videoId={currentVideo.data._id}
-                  videoFile={currentVideo.data.videoFile}
-               />
-               {isTransitioning && <Loading />}
-            </div>
-         </div>
-
-         {/* <Link href={`/video/${currentVideo.data._id}/stats`}>
-            <Button
-               variant="ghost"
-               size="icon"
-               className="absolute top-4 right-4 bg-black bg-opacity-50 text-white hover:bg-opacity-75 z-10"
-            >
-               <BarChart2 className="h-6 w-6" />
-            </Button>
-         </Link> */}
       </div>
    );
 }

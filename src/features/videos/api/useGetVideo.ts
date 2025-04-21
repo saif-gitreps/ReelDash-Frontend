@@ -7,7 +7,7 @@ interface VideoOwner {
    avatar: string;
 }
 
-interface Video {
+export interface Video {
    _id: string;
    videoFile: string;
    thumbnail: string;

@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { useUpdateWatchHistory } from "@/features/user/api/useUpdateWatchHistory";
 import Navbar from "@/components/Navbar";
-import Video from "@/features/videos/components/VideoSection";
+import VideoSection from "@/features/videos/components/VideoSection";
 
 export default function SingleVideo() {
    const params = useParams();
@@ -46,9 +46,9 @@ export default function SingleVideo() {
    }
 
    return (
-      <div className="h-screen w-full overflow-hidden relative">
+      <div className="h-screen w-full flex justify-between flex-col relative">
          <Navbar />
-         <Video video={video.data} />
+         <VideoSection video={video.data} />
       </div>
    );
 }

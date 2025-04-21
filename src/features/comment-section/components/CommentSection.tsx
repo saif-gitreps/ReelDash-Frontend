@@ -66,7 +66,7 @@ export function CommentsSection({ comments, videoId, onClose }: CommentsSectionP
    };
 
    return (
-      <div className="absolute bottom-0 z-50 bg-background left-0 right-0 p-4 h-2/3 rounded-t-xl">
+      <div className="absolute bottom-0 z-50 bg-background left-0 right-0 p-4 h-2/3 rounded-t-xl max-w-xl">
          <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-foreground">Comments</h3>
             <Button
@@ -79,7 +79,7 @@ export function CommentsSection({ comments, videoId, onClose }: CommentsSectionP
             </Button>
          </div>
 
-         <ScrollArea className="h-[calc(100%-8rem)] mb-4">
+         <ScrollArea className="h-[calc(100%-8rem)] mb-4 w-full">
             {comments.map((comment) => (
                <div
                   key={comment._id || comment.createdAt}

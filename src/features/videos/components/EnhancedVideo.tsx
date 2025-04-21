@@ -74,7 +74,7 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
             playsInline
             onClick={handleVideoClick}
          />
-         <div className="absolute bottom-0 left-0 z-30 bg-black bg-opacity-35 flex items-center p-2">
+         <div className="absolute bottom-0 left-0 z-30 bg-opacity-0 flex items-center p-2">
             <div className="flex items-center space-x-1">
                <Button
                   variant="ghost"
