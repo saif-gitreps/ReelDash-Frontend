@@ -12,6 +12,7 @@ import { useLoginUser } from "@/features/user/api/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import AuthLayer from "@/components/AuthLayer";
+import GuestLoginButton from "@/features/guest-login/components/GuestLoginButton";
 
 interface SignUpFormInputs {
    fullname: string;
@@ -113,6 +114,10 @@ export default function SignUp() {
                <Link href="/feed" className="mt-10 block text-center">
                   Watch videos
                </Link>
+
+               <div className="flex justify-center">
+                  <GuestLoginButton />
+               </div>
             </form>
          </div>
       </AuthLayer>

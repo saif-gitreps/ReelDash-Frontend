@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useLoginUser } from "@/features/user/api/useLogin";
 import { useAuth } from "@/hooks/useAuth";
+import { KeyRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -26,7 +27,7 @@ function GuestLoginButton() {
 
    return (
       <Button
-         variant="link"
+         variant="secondary"
          disabled={isPending}
          onClick={() =>
             onClick({
@@ -35,7 +36,13 @@ function GuestLoginButton() {
             })
          }
       >
-         {isPending ? "Logging in..." : "Login as a guest"}
+         {isPending ? (
+            "Logging in..."
+         ) : (
+            <>
+               Login as a guest <KeyRound />{" "}
+            </>
+         )}
       </Button>
    );
 }
