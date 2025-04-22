@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Film } from "lucide-react";
 import Image from "next/image";
+import GuestLoginButton from "@/features/guest-login/components/GuestLoginButton";
 
 export default function Home() {
    return (
@@ -37,6 +38,10 @@ export default function Home() {
                Go to Home Feed
             </Button>
          </Link>
+
+         <div>or</div>
+
+         <GuestLoginButton />
       </div>
    );
 }

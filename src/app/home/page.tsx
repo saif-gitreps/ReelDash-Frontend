@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Loading from "../../components/Loading";
 import { useUpdateWatchHistory } from "../../features/user/api/useUpdateWatchHistory";
 import VideoSection from "@/features/videos/components/VideoSection";
+import GuestLoginButton from "@/features/guest-login/components/GuestLoginButton";
 
 export default function Home() {
    const { isAuthenticated } = useAuth();
@@ -60,6 +61,8 @@ export default function Home() {
                <h2 className="text-xl font-semibold mb-2">
                   Please login to scroll reels.
                </h2>
+
+               <GuestLoginButton />
             </div>
          </div>
       );

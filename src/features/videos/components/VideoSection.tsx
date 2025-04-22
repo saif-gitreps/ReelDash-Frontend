@@ -11,10 +11,11 @@ interface VideoSectionProps {
 
 export default function VideoSection({ video }: VideoSectionProps) {
    return (
-      <div className="w-full h-full">
+      <>
          <div className="h-5/6 w-full relative">
             <EnhancedVideo src={video.videoFile} />
          </div>
+
          <div className="flex justify-between px-5">
             <div className=" text-white w-full">
                <div className="flex items-center space-x-2 mb-2">
@@ -39,6 +40,6 @@ export default function VideoSection({ video }: VideoSectionProps) {
                <VideoActions videoId={video._id} videoFile={video.videoFile} />
             </div>
          </div>
-      </div>
+      </>
    );
 }
