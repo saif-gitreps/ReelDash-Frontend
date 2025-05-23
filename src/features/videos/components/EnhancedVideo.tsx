@@ -48,7 +48,6 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
    };
 
    const handleVideoClick = (e: React.MouseEvent) => {
-      // Prevent triggering if clicking on controls
       if (e.target === videoRef.current) {
          togglePlayPause();
       }
@@ -64,40 +63,54 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
    };
 
    return (
-      <div className="relative w-full h-full">
-         <video
-            ref={videoRef}
-            src={src}
-            className="w-full h-full object-contain max-h-full"
-            autoPlay
-            muted
-            playsInline
-            onClick={handleVideoClick}
-         />
-         <div className="absolute bottom-0 left-0 z-30 bg-opacity-0 flex items-center p-2">
-            <div className="flex items-center space-x-1">
-               <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={togglePlayPause}
-                  className="text-white hover:bg-white/20"
-               >
-                  {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-               </Button>
-               <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleMute}
-                  className="text-white hover:bg-white/20"
-               >
-                  {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-               </Button>
-            </div>
-            <div
-               className="flex-grow mx-2 h-1 bg-white/30 cursor-pointer"
-               onClick={handleSeek}
-            >
-               <div className="h-full bg-white" style={{ width: `${progress}%` }} />
+      <div className="relative max-w-sm mx-auto h-full flex flex-col justify-center">
+         <div
+            className="relative w-full"
+            style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 120px)" }}
+         >
+            <video
+               ref={videoRef}
+               src={src}
+               className="w-full h-full object-cover rounded-lg"
+               autoPlay
+               muted
+               playsInline
+               loop
+               onClick={handleVideoClick}
+            />
+
+            {/* Video Controls */}
+            <div className="absolute bottom-0 left-0 z-50 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 rounded-b-lg">
+               <div className="flex items-center space-x-2">
+                  <Button
+                     variant="ghost"
+                     size="sm"
+                     onClick={togglePlayPause}
+                     className="text-white hover:bg-white/20 h-7 w-7 p-0"
+                  >
+                     {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                  </Button>
+
+                  <Button
+                     variant="ghost"
+                     size="sm"
+                     onClick={toggleMute}
+                     className="text-white hover:bg-white/20 h-7 w-7 p-0"
+                  >
+                     {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                  </Button>
+
+                  {/* Progress Bar */}
+                  <div
+                     className="flex-1 h-1 bg-white/30 cursor-pointer rounded-full overflow-hidden"
+                     onClick={handleSeek}
+                  >
+                     <div
+                        className="h-full bg-white transition-all duration-300 ease-out"
+                        style={{ width: `${progress}%` }}
+                     />
+                  </div>
+               </div>
             </div>
          </div>
       </div>

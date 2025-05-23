@@ -11,35 +11,37 @@ interface VideoSectionProps {
 
 export default function VideoSection({ video }: VideoSectionProps) {
    return (
-      <>
-         <div className="h-5/6 w-full relative">
+      <div className="h-full w-full flex flex-col">
+         {/* Video Container - Takes most of the screen */}
+         <div className="flex-1 relative flex items-center justify-center bg-black">
             <EnhancedVideo src={video.videoFile} />
          </div>
 
-         <div className="flex justify-between px-5">
-            <div className=" text-white w-full">
-               <div className="flex items-center space-x-2 mb-2">
+         {/* Info Section - Fixed height at bottom */}
+         <div className="h-24 flex items-center justify-between px-4 bg-gradient-to-t from-black/80 to-transparent absolute bottom-0 left-0 right-0 z-10 py-6">
+            <div className="text-white flex-1 mr-4">
+               <div className="flex items-center space-x-2 mb-1">
                   <Image
                      src={video.owner.avatar}
                      alt={video.owner.username}
-                     className="w-10 h-10 rounded-full"
+                     className="w-8 h-8 rounded-full"
                      width={32}
                      height={32}
                   />
                   <Link
                      href={`/profile/${video.owner.username}`}
-                     className="text-lg font-bold hover:opacity-70"
+                     className="text-sm font-bold hover:opacity-70"
                   >
                      @{video.owner.username}
                   </Link>
                </div>
-               <p className="text-sm">{video.title}</p>
+               <p className="text-xs line-clamp-2">{video.title}</p>
             </div>
 
-            <div className="flex justify-center items-center w-32">
+            <div className="flex items-center z-large">
                <VideoActions videoId={video._id} videoFile={video.videoFile} />
             </div>
          </div>
-      </>
+      </div>
    );
 }

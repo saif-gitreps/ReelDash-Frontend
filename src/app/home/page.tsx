@@ -1,6 +1,5 @@
 "use client";
 
-// import { useSwipeable } from "react-swipeable";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -40,12 +39,6 @@ export default function Home() {
       }
    };
 
-   // const handlers = useSwipeable({
-   //    onSwipedUp: handleNextVideo,
-   //    onSwipedDown: handlePreviousVideo,
-   //    trackMouse: false,
-   // });
-
    useEffect(() => {
       if (isAuthenticated && currentVideo && currentVideo.data) {
          updateWatchHistory({
@@ -61,7 +54,6 @@ export default function Home() {
                <h2 className="text-xl font-semibold mb-2">
                   Please login to scroll reels.
                </h2>
-
                <GuestLoginButton />
             </div>
          </div>
@@ -83,32 +75,30 @@ export default function Home() {
    }
 
    return (
-      <div className="w-full h-screen overflow-hidden bg-black flex justify-between flex-col relative">
+      <div className="w-full h-screen bg-black relative overflow-hidden">
          <VideoSection video={currentVideo.data} />
 
-         <div className="absolute top-1/3 flex px-5 justify-between w-full">
-            <div className="flex space-x-4 z-10">
-               <Button
-                  variant="default"
-                  size="icon"
-                  onClick={handlePreviousVideo}
-                  disabled={!hasPrevious}
-                  className="rounded-full opacity-55 hover:bg-opacity-75 disabled:opacity-30 text-4xl"
-               >
-                  <ChevronLeft className="h-40 w-40" />
-               </Button>
-            </div>
-            <div className="flex space-x-4 z-10">
-               <Button
-                  variant="default"
-                  size="icon"
-                  onClick={handleNextVideo}
-                  disabled={isTransitioning}
-                  className="rounded-full opacity-55 hover:bg-opacity-75 disabled:opacity-30"
-               >
-                  <ChevronRight className="h-24 w-24" />
-               </Button>
-            </div>
+         {/* Navigation Controls */}
+         <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
+            <Button
+               variant="default"
+               size="icon"
+               onClick={handlePreviousVideo}
+               disabled={!hasPrevious}
+               className="rounded-full bg-black/50 hover:bg-black/70 disabled:opacity-30 pointer-events-auto w-12 h-12"
+            >
+               <ChevronLeft className="h-6 w-6 text-white" />
+            </Button>
+
+            <Button
+               variant="default"
+               size="icon"
+               onClick={handleNextVideo}
+               disabled={isTransitioning}
+               className="rounded-full bg-black/50 hover:bg-black/70 disabled:opacity-30 pointer-events-auto w-12 h-12"
+            >
+               <ChevronRight className="h-6 w-6 text-white" />
+            </Button>
          </div>
       </div>
    );
