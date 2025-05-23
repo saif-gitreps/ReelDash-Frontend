@@ -31,8 +31,8 @@ function GuestLoginButton() {
          disabled={isPending}
          onClick={() =>
             onClick({
-               email: "test@test.com",
-               password: "1234567",
+               email: "guest_reeldash@gmail.com",
+               password: "123456",
             })
          }
       >

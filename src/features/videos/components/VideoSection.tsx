@@ -18,7 +18,7 @@ export default function VideoSection({ video }: VideoSectionProps) {
          </div>
 
          {/* Info Section - Fixed height at bottom */}
-         <div className="h-24 flex items-center justify-between px-4 bg-gradient-to-t from-black/80 to-transparent absolute bottom-0 left-0 right-0 z-10 py-6">
+         <div className="h-24 flex items-center justify-between px-4 bg-gradient-to-t from-black/80 to-transparent absolute bottom-0 left-0 right-0 z-10">
             <div className="text-white flex-1 mr-4">
                <div className="flex items-center space-x-2 mb-1">
                   <Image
@@ -38,7 +38,7 @@ export default function VideoSection({ video }: VideoSectionProps) {
                <p className="text-xs line-clamp-2">{video.title}</p>
             </div>
 
-            <div className="flex items-center z-large">
+            <div className="flex items-center">
                <VideoActions videoId={video._id} videoFile={video.videoFile} />
             </div>
          </div>
