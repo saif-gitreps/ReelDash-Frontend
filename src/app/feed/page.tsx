@@ -7,7 +7,7 @@ import { useGetAllVideos } from "../../features/videos/api/useGetAllVideos";
 import FeedVideoCard from "../../features/videos/components/FeedVideoCard";
 import Loading from "../../components/Loading";
 
-const VIDEOS_PER_PAGE = 6;
+const VIDEOS_PER_PAGE = 9;
 
 export default function Feed() {
    const [currentPage, setCurrentPage] = useState(1);
@@ -38,25 +38,25 @@ export default function Feed() {
    }
 
    return (
-      <div className="container mx-auto p-4 bg-background text-foreground">
+      <div className="mx-auto p-4 bg-background text-foreground">
          {videos.length === 0 && (
             <div className="text-center text-muted-foreground">No videos found</div>
          )}
 
-         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3">
             {videos.map((video) => (
                <FeedVideoCard video={video} key={video._id} />
             ))}
          </div>
 
          {totalPages > 1 && (
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-between items-center mt-4 text-xs">
                <Button
                   onClick={prevPage}
                   disabled={currentPage === 1 || isLoading}
-                  className="yellow-accent-bg"
+                  size={"sm"}
                >
-                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  <ChevronLeft className="w-2 h-2 mr-2" />
                   Previous
                </Button>
                <span>
@@ -65,10 +65,10 @@ export default function Feed() {
                <Button
                   onClick={nextPage}
                   disabled={currentPage === totalPages || isLoading}
-                  className="yellow-accent-bg"
+                  size={"sm"}
                >
                   Next
-                  <ChevronRight className="w-4 h-4 ml-2" />
+                  <ChevronRight className="w-2 h-2 ml-2" />
                </Button>
             </div>
          )}

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface User {
+export interface User {
    _id: string;
    fullname: string;
    username: string;
@@ -11,29 +11,25 @@ interface User {
 
 interface AuthState {
    user: User | null;
-   token: string | null;
    isAuthenticated: boolean;
-   login: (user: User, token: string) => void;
+   login: (user: User) => void;
    logout: () => void;
    updateUser: (user: Partial<User>) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
    user: null,
-   token: null,
    isAuthenticated: false,
 
-   login: (user, token) =>
+   login: (user) =>
       set({
          user,
-         token,
          isAuthenticated: true,
       }),
 
    logout: () =>
       set({
          user: null,
-         token: null,
          isAuthenticated: false,
       }),
 

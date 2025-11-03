@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, Volume2, VolumeX, Loader2 } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 
 interface EnhancedVideoProps {
    src: string;
@@ -33,7 +33,6 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
    const [hasError, setHasError] = useState(false);
    const [canPlay, setCanPlay] = useState(false);
 
-   // Ensure HTTPS URL
    const secureVideoUrl = ensureHttpsUrl(src);
 
    useEffect(() => {
@@ -52,7 +51,7 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
 
       const handleCanPlayThrough = () => {
          setIsLoading(false);
-         // Auto-play once the video is ready
+
          if (videoElement && !isPlaying) {
             videoElement
                .play()
@@ -93,7 +92,6 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
          }
       };
 
-      // Add event listeners
       videoElement.addEventListener("loadstart", handleLoadStart);
       videoElement.addEventListener("canplay", handleCanPlay);
       videoElement.addEventListener("canplaythrough", handleCanPlayThrough);
@@ -115,7 +113,6 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
       };
    }, [isPlaying]);
 
-   // Reset states when video source changes
    useEffect(() => {
       setIsLoading(true);
       setHasError(false);
@@ -189,67 +186,63 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
    }
 
    return (
-      <div className="relative max-w-sm mx-auto h-full flex flex-col justify-center">
-         <div
-            className="relative w-full"
-            style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 120px)" }}
-         >
-            <video
-               ref={videoRef}
-               src={secureVideoUrl}
-               className="w-full h-full object-cover rounded-lg"
-               muted
-               playsInline
-               loop
-               preload="metadata"
-               onClick={handleVideoClick}
-            />
+      <div
+         className="h-full min-w-full w-full relative"
+         style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 105px)" }}
+      >
+         <video
+            ref={videoRef}
+            src={secureVideoUrl}
+            className="h-full w-full rounded-lg object-contain mb-auto"
+            muted
+            playsInline
+            loop
+            preload="metadata"
+            onClick={handleVideoClick}
+         />
 
-            {/* Loading Overlay */}
-            {isLoading && (
+         {/* {isLoading && (
                <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
                   <div className="text-white text-center">
                      <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
                      <div className="text-sm">Loading video...</div>
                   </div>
                </div>
-            )}
+            )} */}
 
-            {/* Video Controls */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 rounded-b-lg">
-               <div className="flex items-center space-x-2">
-                  <Button
-                     variant="ghost"
-                     size="sm"
-                     onClick={togglePlayPause}
-                     disabled={!canPlay}
-                     className="text-white hover:bg-white/20 h-7 w-7 p-0 disabled:opacity-50"
-                  >
-                     {isPlaying ? <Pause size={14} /> : <Play size={14} />}
-                  </Button>
+         {/* Video Controls */}
+         <div className="absolute bottom-0 right-0 p-2 rounded-b-lg">
+            <div className="flex items-center justify-center space-x-2">
+               <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={togglePlayPause}
+                  disabled={!canPlay}
+                  className="text-white hover:bg-white/20 h-7 w-7 p-0 disabled:opacity-50"
+               >
+                  {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+               </Button>
 
-                  <Button
-                     variant="ghost"
-                     size="sm"
-                     onClick={toggleMute}
-                     disabled={!canPlay}
-                     className="text-white hover:bg-white/20 h-7 w-7 p-0 disabled:opacity-50"
-                  >
-                     {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-                  </Button>
+               <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={toggleMute}
+                  disabled={!canPlay}
+                  className="text-white hover:bg-white/20 h-7 w-7 p-0 disabled:opacity-50"
+               >
+                  {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+               </Button>
 
-                  {/* Progress Bar */}
+               <div
+                  className={`flex-1 h-1 bg-white/30 rounded-full overflow-hidden ${
+                     canPlay ? "cursor-pointer" : "cursor-not-allowed"
+                  }`}
+                  onClick={canPlay ? handleSeek : undefined}
+               >
                   <div
-                     className={`flex-1 h-1 bg-white/30 rounded-full overflow-hidden ${
-                        canPlay ? "cursor-pointer" : "cursor-not-allowed"
-                     }`}
-                     onClick={canPlay ? handleSeek : undefined}
-                  >
-                     <div
-                        className="h-full bg-white transition-all duration-300 ease-out"
-                        style={{ width: `${progress}%` }}
-                     />
-                  </div>
+                     className="h-full bg-white transition-all duration-300 ease-out"
+                     style={{ width: `${progress}%` }}
+                  />
                </div>
             </div>
          </div>

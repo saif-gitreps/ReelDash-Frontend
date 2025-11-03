@@ -30,5 +30,13 @@ const fetchCurrentUser = async (): Promise<CurrentUserResponse> => {
 };
 
 export const useCurrentUser = () => {
-   return useQuery({ queryKey: ["currentUser"], queryFn: fetchCurrentUser });
+   return useQuery({
+      queryKey: ["currentUser"],
+      queryFn: fetchCurrentUser,
+      staleTime: 10 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+   });
 };

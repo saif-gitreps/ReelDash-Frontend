@@ -28,7 +28,7 @@ export default function Login() {
       loginUser(data, {
          onSuccess: (response) => {
             toast.success(response.message);
-            login(response.data.user, response.data.accessToken);
+            login(response.data.user);
             router.push("/feed");
          },
          onError: (error) => {

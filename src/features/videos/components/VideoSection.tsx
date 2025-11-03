@@ -11,36 +11,33 @@ interface VideoSectionProps {
 
 export default function VideoSection({ video }: VideoSectionProps) {
    return (
-      <div className="h-full w-full flex flex-col">
-         {/* Video Container - Takes most of the screen */}
-         <div className="flex-1 relative flex items-center justify-center bg-black">
-            <EnhancedVideo src={video.videoFile} />
+      <div className="h-full flex flex-col justify-between items-center">
+         <div className="text-white w-full px-4 pt-4 mt-4">
+            <div className="flex items-center space-x-2 mx-2">
+               <Image
+                  src={video.owner.avatar}
+                  alt={video.owner.username}
+                  className="w-5 h-5 rounded-full"
+                  width={32}
+                  height={32}
+               />
+               <Link
+                  href={`/profile/${video.owner.username}`}
+                  className="text-xs font-bold hover:opacity-70"
+               >
+                  @{video.owner.username}
+               </Link>
+            </div>
+            <div className="text-xs">{video.title}</div>
          </div>
 
-         {/* Info Section - Fixed height at bottom */}
-         <div className="h-24 flex items-center justify-between px-4 bg-gradient-to-t from-black/80 to-transparent absolute bottom-0 left-0 right-0 z-10">
-            <div className="text-white flex-1 mr-4">
-               <div className="flex items-center space-x-2 mb-1">
-                  <Image
-                     src={video.owner.avatar}
-                     alt={video.owner.username}
-                     className="w-8 h-8 rounded-full"
-                     width={32}
-                     height={32}
-                  />
-                  <Link
-                     href={`/profile/${video.owner.username}`}
-                     className="text-sm font-bold hover:opacity-70"
-                  >
-                     @{video.owner.username}
-                  </Link>
-               </div>
-               <p className="text-xs line-clamp-2">{video.title}</p>
+         <div className="flex flex-col justify-between">
+            <div className="flex items-center justify-center bg-black">
+               <EnhancedVideo src={video.videoFile} />
             </div>
-
-            <div className="flex items-center">
-               <VideoActions videoId={video._id} videoFile={video.videoFile} />
-            </div>
+         </div>
+         <div className="mb-4">
+            <VideoActions videoId={video._id} videoFile={video.videoFile} />
          </div>
       </div>
    );

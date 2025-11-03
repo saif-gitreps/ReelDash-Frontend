@@ -41,7 +41,7 @@ export default function VideoActions({ videoId }: VideoActionsProps) {
 
    return (
       <div className="space-x-1 w-full">
-         <div className="flex justify-between items-center">
+         <div className="flex items-center">
             <ActionButton
                Icon={Heart}
                isActive={isLiked?.data}

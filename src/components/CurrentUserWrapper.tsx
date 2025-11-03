@@ -14,7 +14,7 @@ export default function CurrentUserWrapper({
 
    useEffect(() => {
       if (user) {
-         login(user.data, "");
+         login(user.data);
       }
    }, [user, login]);
 
