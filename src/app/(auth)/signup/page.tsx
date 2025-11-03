@@ -42,7 +42,7 @@ export default function SignUp() {
             toast.success(response.message);
             loginUser({ email: formData.email, password: formData.password });
 
-            login(response.data, "");
+            login(response.data);
 
             router.push("/feed");
          },

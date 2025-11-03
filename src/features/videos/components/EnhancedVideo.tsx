@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+import Loader from "@/components/Loader";
 
 interface EnhancedVideoProps {
    src: string;
@@ -167,7 +168,7 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
          <div className="relative max-w-sm mx-auto h-full flex flex-col justify-center">
             <div
                className="relative w-full bg-gray-800 rounded-lg flex items-center justify-center"
-               style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 120px)" }}
+               style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 105p)" }}
             >
                <div className="text-white text-center p-4">
                   <div className="text-sm mb-2">Failed to load video</div>
@@ -201,14 +202,7 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
             onClick={handleVideoClick}
          />
 
-         {/* {isLoading && (
-               <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
-                  <div className="text-white text-center">
-                     <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
-                     <div className="text-sm">Loading video...</div>
-                  </div>
-               </div>
-            )} */}
+         {isLoading && <Loader />}
 
          {/* Video Controls */}
          <div className="absolute bottom-0 right-0 p-2 rounded-b-lg">

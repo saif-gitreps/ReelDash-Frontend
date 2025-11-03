@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useGetAllVideos } from "../../features/videos/api/useGetAllVideos";
 import FeedVideoCard from "../../features/videos/components/FeedVideoCard";
-import Loading from "../../components/Loading";
+import ErrorMessage from "@/components/ErrorMessage";
+import Loader from "../../components/Loader";
 
 const VIDEOS_PER_PAGE = 9;
 
@@ -18,11 +19,7 @@ export default function Feed() {
    });
 
    if (error) {
-      return (
-         <div className="text-center text-red-500">
-            Failed to load videos: {error.message}
-         </div>
-      );
+      return <ErrorMessage>Failed to load videos {error.message as string}</ErrorMessage>;
    }
 
    const videos = data?.data.videos || [];
@@ -34,7 +31,7 @@ export default function Feed() {
    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
    if (isLoading && data === undefined) {
-      return <Loading />;
+      return <Loader />;
    }
 
    return (

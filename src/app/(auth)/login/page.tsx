@@ -48,6 +48,7 @@ export default function Login() {
                      Signup
                   </Link>
                </div>
+
                <div>
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -64,6 +65,7 @@ export default function Login() {
                      {...register("password", { required: "Password is required" })}
                   />
                </div>
+
                <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? "Logging in..." : "Login"}
                </Button>

@@ -82,6 +82,7 @@ export default function UploadVideo() {
                   <Input id="title" {...register("title")} />
                   {errors.title && <p className="text-red-500">{errors.title.message}</p>}
                </div>
+
                <div>
                   <Label htmlFor="description">Description</Label>
                   <Textarea id="description" rows={4} {...register("description")} />
@@ -89,6 +90,7 @@ export default function UploadVideo() {
                      <p className="text-red-500">{errors.description.message}</p>
                   )}
                </div>
+
                <div>
                   <Label htmlFor="thumbnail">Thumbnail File</Label>
                   <Input
@@ -101,6 +103,7 @@ export default function UploadVideo() {
                      <p className="text-red-500">{errors.thumbnail.message}</p>
                   )}
                </div>
+
                <div>
                   <Label htmlFor="video">Video File</Label>
                   <Input
@@ -111,6 +114,7 @@ export default function UploadVideo() {
                   />
                   {errors.video && <p className="text-red-500">{errors.video.message}</p>}
                </div>
+
                <Button type="submit" disabled={isPending}>
                   {isPending ? "Uploading..." : "Upload Video"}
                </Button>

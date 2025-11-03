@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { useUpdateWatchHistory } from "@/features/user/api/useUpdateWatchHistory";
 import Navbar from "@/components/Navbar";
 import VideoSection from "@/features/videos/components/VideoSection";
+import Loader from "@/components/Loader";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export default function SingleVideo() {
    const params = useParams();
@@ -24,30 +26,17 @@ export default function SingleVideo() {
    }, [videoId, isAuthenticated, video, updateWatchHistory]);
 
    if (isLoading) {
-      return (
-         <div className="h-screen w-full flex items-center justify-center bg-black text-white">
-            <div className="text-center">
-               <div className="text-xl font-semibold mb-2">
-                  Loading <span className="animate-ping text-bold text-4xl">...</span>
-               </div>
-            </div>
-         </div>
-      );
+      return <Loader />;
    }
 
    if (!video) {
-      return (
-         <div className="h-screen w-full flex items-center justify-center bg-black text-white">
-            <div className="text-center">
-               <div className="text-xl font-semibold">No such video</div>
-            </div>
-         </div>
-      );
+      return <ErrorMessage>No such video available</ErrorMessage>;
    }
 
    return (
       <div className="h-screen w-full flex justify-between flex-col relative">
          <Navbar />
+
          <VideoSection video={video.data} />
       </div>
    );

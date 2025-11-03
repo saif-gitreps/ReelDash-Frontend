@@ -1,7 +1,6 @@
 "use client";
 
 import AuthLayer from "@/components/AuthLayer";
-import Loading from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import { useGetSubscribedChannels } from "@/features/subscription/api/useGetSubbedChannels";
 import { useSubOrUnsubChannel } from "@/features/subscription/api/useToggleSub";
@@ -11,6 +10,7 @@ import { UserMinus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import Loader from "@/components/Loader";
 
 export default function Page() {
    const { data, isLoading } = useGetSubscribedChannels();
@@ -38,7 +38,7 @@ export default function Page() {
    const channels = data?.data || [];
 
    if (isLoading && channels === undefined) {
-      return <Loading />;
+      return <Loader />;
    }
 
    return (

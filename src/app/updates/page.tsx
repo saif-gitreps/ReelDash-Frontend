@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Plus, Filter, Trash2, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Plus, Filter, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useGetSubbedChannelsPosts } from "@/features/updates/api/useGetSubbedChannelsPosts";
 import { useDeletePost } from "@/features/updates/api/useDeleteUpdate";
@@ -12,7 +12,7 @@ import formatDate from "@/lib/format-date";
 import { useAuth } from "@/hooks/useAuth";
 import AuthLayer from "../../components/AuthLayer";
 import { useQueryClient } from "@tanstack/react-query";
-import Loading from "../../components/Loading";
+import Loader from "../../components/Loader";
 
 const UPDATES_PER_PAGE = 5;
 
@@ -58,7 +58,7 @@ export default function Updates() {
    };
 
    if (isLoading || !isMounted) {
-      return <Loading />;
+      return <Loader />;
    }
 
    return (
@@ -126,14 +126,7 @@ export default function Updates() {
                                  className="text-destructive hover:text-destructive"
                                  disabled={isDeletePending}
                               >
-                                 {isDeletePending ? (
-                                    <Loader2
-                                       className="animate-spin stroke-white"
-                                       size={32}
-                                    />
-                                 ) : (
-                                    <Trash2 size={32} />
-                                 )}
+                                 {isDeletePending ? <Loader /> : <Trash2 size={32} />}
                               </Button>
                            )}
                         </div>

@@ -12,13 +12,13 @@ import { useUpdateUserAvatar } from "@/features/user/api/useUpdateUserAvatar";
 import { useUpdateUserCoverImage } from "@/features/user/api/useUpdateUserCoverImage";
 import { useGetAllVideos } from "@/features/videos/api/useGetAllVideos";
 import FeedVideoCard from "@/features/videos/components/FeedVideoCard";
-import Loading from "@/components/Loading";
 import { useWatchHistory } from "@/features/user/api/useWatchHistory";
 import { useUserChannelProfile } from "@/features/user/api/useUserChannelProfile";
 import { useSubOrUnsubChannel } from "@/features/subscription/api/useToggleSub";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIsSubscribed } from "@/features/subscription/api/useIsSubscribed";
+import Loader from "@/components/Loader";
 
 const VIDEOS_PER_PAGE = 4;
 
@@ -130,14 +130,14 @@ export default function UserProfile() {
    };
 
    if (isLoading) {
-      return <Loading />;
+      return <Loader />;
    }
 
    return (
       <div className="container mx-auto p-4 bg-background text-foreground">
          <div className="relative w-full h-72 mb-16">
             {isCoverImageUpdating ? (
-               <Loading />
+               <Loader />
             ) : (
                <Image
                   src={
@@ -174,7 +174,7 @@ export default function UserProfile() {
 
             <div className="absolute -bottom-16 left-4 w-40 h-40 rounded-full overflow-hidden border-4 border-background">
                {isAvatarUpdating ? (
-                  <Loading />
+                  <Loader />
                ) : (
                   <Image
                      src={
@@ -275,7 +275,7 @@ export default function UserProfile() {
             <TabsContent value="uploaded">
                <div className="">
                   {isChannelVideosLoading ? (
-                     <Loading />
+                     <Loader />
                   ) : (
                      <>
                         {channelVideos?.length === 0 && !isChannelVideosLoading && (
@@ -325,7 +325,7 @@ export default function UserProfile() {
                <TabsContent value="history">
                   <div>
                      {isWatchHistoryLoading ? (
-                        <Loading />
+                        <Loader />
                      ) : (
                         <>
                            {paginatedHistory?.length === 0 && !isWatchHistoryLoading && (

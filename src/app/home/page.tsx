@@ -5,10 +5,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useVideoPlayer } from "@/hooks/useVideoPlayer";
 import { useAuth } from "@/hooks/useAuth";
-import Loading from "../../components/Loading";
 import { useUpdateWatchHistory } from "../../features/user/api/useUpdateWatchHistory";
 import VideoSection from "@/features/videos/components/VideoSection";
 import GuestLoginButton from "@/features/guest-login/components/GuestLoginButton";
+import Loader from "../../components/Loader";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export default function Home() {
    const { isAuthenticated } = useAuth();
@@ -61,17 +62,11 @@ export default function Home() {
    }
 
    if (isInitialLoading) {
-      return <Loading />;
+      return <Loader />;
    }
 
    if (!currentVideo || !currentVideo.data) {
-      return (
-         <div className="h-screen w-full flex items-center justify-center bg-black text-white">
-            <div className="text-center">
-               <div className="text-xl font-semibold">No videos available.</div>
-            </div>
-         </div>
-      );
+      return <ErrorMessage>No videos currently</ErrorMessage>;
    }
 
    return (

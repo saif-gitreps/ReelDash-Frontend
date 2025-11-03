@@ -11,6 +11,7 @@ export default function Home() {
             Welcome to ReelDash{" "}
             <Image src="/icons8-wind-64.png" alt="Icon" width="38" height="38" />
          </h1>
+
          <div className="flex space-x-4">
             <Link href="/login">
                <Button className="yellow-accent-bg">Login</Button>
@@ -33,6 +34,7 @@ export default function Home() {
                </Button>
             </Link>
          </div>
+
          <Link href="/home" className="mt-4">
             <Button variant="link" className="yellow-accent">
                Go to Home Feed

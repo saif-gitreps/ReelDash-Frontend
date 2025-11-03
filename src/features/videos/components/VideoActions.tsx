@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useIsLiked } from "@/features/videos/api/useIsLikedVideo";
 import { useAuth } from "@/hooks/useAuth";
 import { useGetLikesOnAVideo } from "@/features/videos/api/useGetLikesOnVideo";
-import Loading from "../../../components/Loading";
+import Loading from "../../../components/Loader";
 import { CommentsSection } from "../../comment-section/components/CommentSection";
 import { useGetCommentsOnVideo } from "../../comment-section/api/useGetComments";
 

@@ -52,6 +52,7 @@ export default function NewPost() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                <div>
                   <Label htmlFor="content">Content</Label>
+
                   <Textarea
                      id="content"
                      {...register("content")}

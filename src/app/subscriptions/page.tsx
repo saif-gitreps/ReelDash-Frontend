@@ -6,10 +6,11 @@ import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useGetSubscribedChannelsVideos } from "@/features/videos/api/useGetSubscribedChannelVideos";
 import AuthLayer from "../../components/AuthLayer";
 import FeedVideoCard from "../../features/videos/components/FeedVideoCard";
-import Loading from "../../components/Loading";
 import { useGetSubscribedChannels } from "@/features/subscription/api/useGetSubbedChannels";
 import Link from "next/link";
 import Image from "next/image";
+import ErrorMessage from "@/components/ErrorMessage";
+import Loader from "../../components/Loader";
 
 const VIDEOS_PER_PAGE = 6;
 
@@ -25,9 +26,7 @@ export default function Feed() {
 
    if (error) {
       return (
-         <div className="text-center text-red-500">
-            Failed to load videos: {error.message}
-         </div>
+         <ErrorMessage>Failled to load videos {error.message as string}</ErrorMessage>
       );
    }
 
@@ -40,7 +39,7 @@ export default function Feed() {
    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
    if (isLoading && isSubscribedChannelsLoading && data === undefined) {
-      return <Loading />;
+      return <Loader />;
    }
 
    if (channels.length === 0) {

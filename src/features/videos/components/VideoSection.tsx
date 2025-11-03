@@ -23,12 +23,12 @@ export default function VideoSection({ video }: VideoSectionProps) {
                />
                <Link
                   href={`/profile/${video.owner.username}`}
-                  className="text-xs font-bold hover:opacity-70"
+                  className="text-sm font-bold hover:opacity-70"
                >
                   @{video.owner.username}
                </Link>
             </div>
-            <div className="text-xs">{video.title}</div>
+            <div className="text-xs mt-1">{video.title}</div>
          </div>
 
          <div className="flex flex-col justify-between">
