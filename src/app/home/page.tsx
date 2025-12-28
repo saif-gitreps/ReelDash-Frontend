@@ -73,7 +73,6 @@ export default function Home() {
       <div className="w-full h-screen bg-black relative overflow-hidden">
          <VideoSection video={currentVideo.data} />
 
-         {/* Navigation Controls */}
          <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
             <Button
                variant="default"

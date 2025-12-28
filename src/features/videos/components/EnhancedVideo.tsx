@@ -1,242 +1,94 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import Loader from "@/components/Loader";
+import { useVideoPlayer } from "../hooks/useVideoPlayer";
 
 interface EnhancedVideoProps {
    src: string;
 }
 
-// Utility function to ensure HTTPS URLs from Cloudinary
 const ensureHttpsUrl = (url: string): string => {
    if (!url) return url;
-
-   // Convert HTTP to HTTPS
-   if (url.startsWith("http://")) {
-      return url.replace("http://", "https://");
-   }
-
-   // For Cloudinary URLs, ensure they use HTTPS
-   if (url.includes("cloudinary.com") && !url.startsWith("https://")) {
-      return `https://${url.replace(/^https?:\/\//, "")}`;
-   }
-
-   return url;
+   return url.replace(/^http:\/\//, "https://");
 };
 
 export default function EnhancedVideo({ src }: EnhancedVideoProps) {
    const videoRef = useRef<HTMLVideoElement>(null);
-   const [isPlaying, setIsPlaying] = useState(false);
-   const [isMuted, setIsMuted] = useState(true);
-   const [progress, setProgress] = useState(0);
-   const [isLoading, setIsLoading] = useState(true);
-   const [hasError, setHasError] = useState(false);
-   const [canPlay, setCanPlay] = useState(false);
+   const secureUrl = ensureHttpsUrl(src);
 
-   const secureVideoUrl = ensureHttpsUrl(src);
+   const {
+      isPlaying,
+      isMuted,
+      progress,
+      isLoading,
+      hasError,
+      canPlay,
+      togglePlayPause,
+      toggleMute,
+      seek,
+   } = useVideoPlayer(videoRef, secureUrl);
 
-   useEffect(() => {
-      const videoElement = videoRef.current;
-      if (!videoElement) return;
-
-      const handleLoadStart = () => {
-         setIsLoading(true);
-         setHasError(false);
-      };
-
-      const handleCanPlay = () => {
-         setCanPlay(true);
-         setIsLoading(false);
-      };
-
-      const handleCanPlayThrough = () => {
-         setIsLoading(false);
-
-         if (videoElement && !isPlaying) {
-            videoElement
-               .play()
-               .then(() => {
-                  setIsPlaying(true);
-               })
-               .catch((error) => {
-                  console.log("Auto-play failed:", error);
-                  setIsPlaying(false);
-               });
-         }
-      };
-
-      const handleWaiting = () => {
-         setIsLoading(true);
-      };
-
-      const handlePlaying = () => {
-         setIsLoading(false);
-         setIsPlaying(true);
-      };
-
-      const handlePause = () => {
-         setIsPlaying(false);
-      };
-
-      const handleError = () => {
-         setIsLoading(false);
-         setHasError(true);
-         console.error("Video loading error");
-      };
-
-      const updateProgress = () => {
-         if (videoElement.duration) {
-            const progressPercent =
-               (videoElement.currentTime / videoElement.duration) * 100;
-            setProgress(progressPercent);
-         }
-      };
-
-      videoElement.addEventListener("loadstart", handleLoadStart);
-      videoElement.addEventListener("canplay", handleCanPlay);
-      videoElement.addEventListener("canplaythrough", handleCanPlayThrough);
-      videoElement.addEventListener("waiting", handleWaiting);
-      videoElement.addEventListener("playing", handlePlaying);
-      videoElement.addEventListener("pause", handlePause);
-      videoElement.addEventListener("error", handleError);
-      videoElement.addEventListener("timeupdate", updateProgress);
-
-      return () => {
-         videoElement.removeEventListener("loadstart", handleLoadStart);
-         videoElement.removeEventListener("canplay", handleCanPlay);
-         videoElement.removeEventListener("canplaythrough", handleCanPlayThrough);
-         videoElement.removeEventListener("waiting", handleWaiting);
-         videoElement.removeEventListener("playing", handlePlaying);
-         videoElement.removeEventListener("pause", handlePause);
-         videoElement.removeEventListener("error", handleError);
-         videoElement.removeEventListener("timeupdate", updateProgress);
-      };
-   }, [isPlaying]);
-
-   useEffect(() => {
-      setIsLoading(true);
-      setHasError(false);
-      setCanPlay(false);
-      setIsPlaying(false);
-      setProgress(0);
-   }, [secureVideoUrl]);
-
-   const togglePlayPause = () => {
-      const video = videoRef.current;
-      if (!video || !canPlay) return;
-
-      if (video.paused) {
-         video
-            .play()
-            .then(() => {
-               setIsPlaying(true);
-            })
-            .catch((error) => {
-               console.log("Play failed:", error);
-            });
-      } else {
-         video.pause();
-         setIsPlaying(false);
-      }
-   };
-
-   const toggleMute = () => {
-      const video = videoRef.current;
-      if (!video) return;
-      video.muted = !video.muted;
-      setIsMuted(video.muted);
-   };
-
-   const handleVideoClick = (e: React.MouseEvent) => {
-      if (e.target === videoRef.current && canPlay) {
-         togglePlayPause();
-      }
-   };
-
-   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-      const seekBar = e.currentTarget;
-      const video = videoRef.current;
-      if (!video || !seekBar || !canPlay) return;
-      const rect = seekBar.getBoundingClientRect();
-      const seekPosition = (e.clientX - rect.left) / rect.width;
-      video.currentTime = seekPosition * video.duration;
+   const handleSeekClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      seek((e.clientX - rect.left) / rect.width);
    };
 
    if (hasError) {
       return (
-         <div className="relative max-w-sm mx-auto h-full flex flex-col justify-center">
-            <div
-               className="relative w-full bg-gray-800 rounded-lg flex items-center justify-center"
-               style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 105p)" }}
-            >
-               <div className="text-white text-center p-4">
-                  <div className="text-sm mb-2">Failed to load video</div>
-                  <Button
-                     onClick={() => window.location.reload()}
-                     variant="outline"
-                     size="sm"
-                     className="text-white border-white hover:bg-white hover:text-black"
-                  >
-                     Retry
-                  </Button>
-               </div>
+         <div className="flex items-center justify-center bg-gray-900 rounded-lg aspect-[9/16] max-h-[80vh]">
+            <div className="text-center p-4">
+               <p className="text-white text-sm mb-4">Video failed to load</p>
+               <Button onClick={() => window.location.reload()} variant="outline">
+                  Retry
+               </Button>
             </div>
          </div>
       );
    }
 
    return (
-      <div
-         className="h-full min-w-full w-full relative"
-         style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 105px)" }}
-      >
+      <div className="relative w-full aspect-[9/16] max-h-[80vh] overflow-hidden bg-black rounded-lg">
          <video
             ref={videoRef}
-            src={secureVideoUrl}
-            className="h-full w-full rounded-lg object-contain mb-auto"
+            src={secureUrl}
+            className="h-full w-full object-contain cursor-pointer"
             muted
             playsInline
             loop
-            preload="metadata"
-            onClick={handleVideoClick}
+            onClick={togglePlayPause}
          />
 
          {isLoading && <Loader />}
 
-         {/* Video Controls */}
-         <div className="absolute bottom-0 right-0 p-2 rounded-b-lg">
-            <div className="flex items-center justify-center space-x-2">
+         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+            <div className="flex items-center gap-3">
                <Button
                   variant="ghost"
-                  size="sm"
+                  size="icon"
                   onClick={togglePlayPause}
                   disabled={!canPlay}
-                  className="text-white hover:bg-white/20 h-7 w-7 p-0 disabled:opacity-50"
+                  className="text-white"
                >
-                  {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                  {isPlaying ? <Pause size={18} /> : <Play size={18} />}
                </Button>
 
                <Button
                   variant="ghost"
-                  size="sm"
+                  size="icon"
                   onClick={toggleMute}
                   disabled={!canPlay}
-                  className="text-white hover:bg-white/20 h-7 w-7 p-0 disabled:opacity-50"
+                  className="text-white"
                >
-                  {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                  {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
                </Button>
 
                <div
-                  className={`flex-1 h-1 bg-white/30 rounded-full overflow-hidden ${
-                     canPlay ? "cursor-pointer" : "cursor-not-allowed"
-                  }`}
-                  onClick={canPlay ? handleSeek : undefined}
+                  className="flex-1 h-1.5 bg-white/20 rounded-full cursor-pointer overflow-hidden"
+                  onClick={handleSeekClick}
                >
-                  <div
-                     className="h-full bg-white transition-all duration-300 ease-out"
-                     style={{ width: `${progress}%` }}
-                  />
+                  <div className="h-full bg-blue-500" style={{ width: `${progress}%` }} />
                </div>
             </div>
          </div>
