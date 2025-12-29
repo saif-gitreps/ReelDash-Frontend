@@ -95,7 +95,7 @@ function ActionButton({ Icon, isActive, count, onClick, isDisabled }: ActionButt
          <button
             onClick={onClick}
             disabled={isDisabled}
-            className="flex items-center justify-center bg-black"
+            className="flex items-center justify-center"
          >
             <Icon className={isActive ? "text-red-500" : ""} size={24} />
          </button>

@@ -1,8 +1,8 @@
 "use client";
+
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, Volume2, VolumeX } from "lucide-react";
-import Loader from "@/components/Loader";
+import { Play, Pause, Volume2, VolumeX, Loader2 } from "lucide-react";
 import { useVideoPlayer } from "../hooks/useVideoPlayer";
 
 interface EnhancedVideoProps {
@@ -11,7 +11,16 @@ interface EnhancedVideoProps {
 
 const ensureHttpsUrl = (url: string): string => {
    if (!url) return url;
-   return url.replace(/^http:\/\//, "https://");
+
+   if (url.startsWith("http://")) {
+      return url.replace("http://", "https://");
+   }
+
+   if (url.includes("cloudinary.com") && !url.startsWith("https://")) {
+      return `https://${url.replace(/^https?:\/\//, "")}`;
+   }
+
+   return url;
 };
 
 export default function EnhancedVideo({ src }: EnhancedVideoProps) {
@@ -37,19 +46,32 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
 
    if (hasError) {
       return (
-         <div className="flex items-center justify-center bg-gray-900 rounded-lg aspect-[9/16] max-h-[80vh]">
-            <div className="text-center p-4">
-               <p className="text-white text-sm mb-4">Video failed to load</p>
-               <Button onClick={() => window.location.reload()} variant="outline">
-                  Retry
-               </Button>
+         <div className="relative max-w-sm mx-auto h-full flex flex-col justify-center">
+            <div
+               className="relative w-full bg-gray-800 rounded-lg flex items-center justify-center"
+               style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 105p)" }}
+            >
+               <div className="text-white text-center p-4">
+                  <div className="text-sm mb-2">Failed to load video</div>
+                  <Button
+                     onClick={() => window.location.reload()}
+                     variant="outline"
+                     size="sm"
+                     className="text-white border-white hover:bg-white hover:text-black"
+                  >
+                     Retry
+                  </Button>
+               </div>
             </div>
          </div>
       );
    }
 
    return (
-      <div className="relative w-full aspect-[9/16] max-h-[80vh] overflow-hidden bg-black rounded-lg">
+      <div
+         className="h-full min-w-full w-full relative"
+         style={{ aspectRatio: "9/16", maxHeight: "calc(100vh - 105px)" }}
+      >
          <video
             ref={videoRef}
             src={secureUrl}
@@ -60,18 +82,22 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
             onClick={togglePlayPause}
          />
 
-         {isLoading && <Loader />}
+         {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+               <Loader2 className="size-10 animate-spin stroke-white" />
+            </div>
+         )}
 
-         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-            <div className="flex items-center gap-3">
+         <div className="absolute bottom-0 right-0 p-2 rounded-b-lg">
+            <div className="flex items-center justify-center space-x-2">
                <Button
                   variant="ghost"
                   size="icon"
                   onClick={togglePlayPause}
                   disabled={!canPlay}
-                  className="text-white"
+                  className="text-white hover:bg-white/20 h-7 w-7 p-0 disabled:opacity-50"
                >
-                  {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+                  {isPlaying ? <Pause size={14} /> : <Play size={14} />}
                </Button>
 
                <Button
@@ -85,10 +111,15 @@ export default function EnhancedVideo({ src }: EnhancedVideoProps) {
                </Button>
 
                <div
-                  className="flex-1 h-1.5 bg-white/20 rounded-full cursor-pointer overflow-hidden"
-                  onClick={handleSeekClick}
+                  className={`flex-1 h-1 bg-white/30 rounded-full overflow-hidden ${
+                     canPlay ? "cursor-pointer" : "cursor-not-allowed"
+                  }`}
+                  onClick={canPlay ? handleSeekClick : undefined}
                >
-                  <div className="h-full bg-blue-500" style={{ width: `${progress}%` }} />
+                  <div
+                     className="h-full bg-white transition-all duration-300 ease-out"
+                     style={{ width: `${progress}%` }}
+                  />
                </div>
             </div>
          </div>
